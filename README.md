@@ -1,4 +1,11 @@
-# React + Vite
+# Đồ án Phát triển ứng dụng Web
+
+Các bước cài đặt và sử dụng:
+- Clone git
+- Mở terminal:
++ cd shoes-store
++ npm install / npm i
++ npm run dev
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

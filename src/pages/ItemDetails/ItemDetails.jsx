@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import QuantitySelection from "../../components/QuantitySelection";
-import { Link } from "react-router-dom";
+
 
 import RecommentItem from "../../components/RecommentItem/RecommentItem";
 const images = [
@@ -40,13 +40,13 @@ const ItemDetails = () => {
               <img
                 src={activeImg.link}
                 alt="mainImage"
-                className="w-full max-h-[500px]"
+                className="w-full max-h-[500px] border-b-2"
               />
               <div className='flex flex-row justify-between h-24'>
-                    <img src={images[0].link} alt="" className=' hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-md cursor-pointer' onClick={() => setActiveImage(images[0])}/>
-                    <img src={images[1].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-md cursor-pointer' onClick={() => setActiveImage(images[1])}/>
-                    <img src={images[2].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-md cursor-pointer' onClick={() => setActiveImage(images[2])}/>
-                    <img src={images[3].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-md cursor-pointer' onClick={() => setActiveImage(images[3])}/>
+                    <img src={images[0].link} alt="" className=' hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-bl-md cursor-pointer' onMouseOver={() => setActiveImage(images[0])}/>
+                    <img src={images[1].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit cursor-pointer' onMouseOver={() => setActiveImage(images[1])}/>
+                    <img src={images[2].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit  cursor-pointer' onMouseOver={() => setActiveImage(images[2])}/>
+                    <img src={images[3].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-br-md cursor-pointer' onMouseOver={() => setActiveImage(images[3])}/>
                 </div>
             </div>
             <div className="w-2/5">
