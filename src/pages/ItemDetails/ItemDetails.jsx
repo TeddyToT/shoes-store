@@ -33,16 +33,16 @@ const ItemDetails = () => {
   }
   return (
     <>
-      <div className="w-full h-auto flex flex-col py-5 mb-20">
+      <div className="w-11/12 h-auto flex flex-col py-5 mb-20">
         <div className="w-full">
-          <div className="w-full flex flex-row gap-20">
-            <div className="w-1/2 flex flex-col  rounded-xl mt-2">
+          <div className="w-full flex flex-row gap-20 justify-center items-center">
+            <div className="w-2/3 flex flex-col  rounded-xl mt-2">
               <img
                 src={activeImg.link}
                 alt="mainImage"
-                className="w-full max-h-[500px] border-b-2"
+                className="w-2/3 max-h-[500px] border-b-2"
               />
-              <div className='flex flex-row justify-between h-24'>
+              <div className='flex flex-row justify-between h-24 w-2/3'>
                     <img src={images[0].link} alt="" className=' hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-bl-md cursor-pointer' onMouseOver={() => setActiveImage(images[0])}/>
                     <img src={images[1].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit cursor-pointer' onMouseOver={() => setActiveImage(images[1])}/>
                     <img src={images[2].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit  cursor-pointer' onMouseOver={() => setActiveImage(images[2])}/>
