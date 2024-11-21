@@ -415,7 +415,7 @@ const Search = () => {
   
   const totalPages = Math.ceil(searchProduct.length / itemsPerPage);
   return (
-    <div className="bg-slate-300 w-full h-auto flex justify-center pb-[10vh] ">
+    <div className="bg-slate-300 w-full h-auto flex justify-center place-self-center pb-[10vh] pt-7 ">
       <div className="w-11/12">
         <div className=" w-full lg:w-3/4 md:w-full md:mt-3 sm:w-4/6 sm:mt-3  flex flex-row border rounded-lg bg-zinc-200 p-2 mb-5">
           <form className="w-full"
@@ -463,7 +463,7 @@ const Search = () => {
             </div>
             <div className=" md:flex flex-col items-center w-1/4 justify-stretch content-center">
               <div>
-                <label className=" text-red-500 font-medium text-xl">
+                <label className="  font-bold text-xl">
                   Bộ lọc
                 </label>
               </div>

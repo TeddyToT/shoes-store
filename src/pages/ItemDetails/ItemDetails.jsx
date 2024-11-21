@@ -33,23 +33,23 @@ const ItemDetails = () => {
   }
   return (
     <>
-      <div className="w-11/12 h-auto flex flex-col py-5 mb-20">
-        <div className="w-full">
-          <div className="w-full flex flex-row gap-20 justify-center items-center">
-            <div className="w-2/3 flex flex-col  rounded-xl mt-2">
+      <div className="w-11/12 h-auto flex flex-col py-5 mb-20  items-center place-self-center">
+        <div className="w-11/12 px-24 flex ">
+          <div className="w-11/12  flex flex-row">
+            <div className="basis-3/4 flex flex-col items-center rounded-xl mt-2">
               <img
                 src={activeImg.link}
                 alt="mainImage"
-                className="w-2/3 max-h-[500px] border-b-2"
+                className="w-3/4 max-h-[500px] border-b-2"
               />
-              <div className='flex flex-row justify-between h-24 w-2/3'>
+              <div className='flex flex-row justify-between h-24 w-3/4'>
                     <img src={images[0].link} alt="" className=' hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-bl-md cursor-pointer' onMouseOver={() => setActiveImage(images[0])}/>
                     <img src={images[1].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit cursor-pointer' onMouseOver={() => setActiveImage(images[1])}/>
                     <img src={images[2].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit  cursor-pointer' onMouseOver={() => setActiveImage(images[2])}/>
                     <img src={images[3].link} alt="" className='hover:scale-105 hover:brightness-105 w-1/4 max-h-fit rounded-br-md cursor-pointer' onMouseOver={() => setActiveImage(images[3])}/>
                 </div>
             </div>
-            <div className="w-2/5">
+            <div className="basis-1/4 ">
               <div className="w-full pb-5 mb-5 border-b-2 border-gray-500">
                 <p className="text-4xl font-bold mt-2 mb-1">
                   Nike Dunk High By You
@@ -126,8 +126,8 @@ const ItemDetails = () => {
           </div>
         </div>
 
-        <div className="w-full flex justify-center mt-20">
-          <RecommentItem />
+        <div className="w-full flex justify-center items-center mt-20">
+          <RecommentItem className="flex justify-center items-center"/>
         </div>
       </div>
     </>

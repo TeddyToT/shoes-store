@@ -90,8 +90,8 @@ const RecommentItem = () => {
     return (
         <>
             
-                <div className="w-11/12">
-                    <p className="font-bold text-3xl">SẢN PHẨM LIÊN QUAN</p>
+                <div className="w-11/12 ">
+                    <p className="font-bold text-3xl text-center">SẢN PHẨM LIÊN QUAN</p>
                     <div className="mt-5">
                         <Swiper
                             slidesPerView={2}
