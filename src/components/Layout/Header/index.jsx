@@ -1,8 +1,8 @@
 import { Layout } from 'antd'
 import { Input } from 'antd';
 import Navbar from '../../Mini_components/Navbar';
-
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faBagShopping } from '@fortawesome/free-solid-svg-icons';
 function Header() {
     const { Header } = Layout;
     const { Search } = Input;
@@ -18,7 +18,7 @@ function Header() {
         }} >
             <div className='header__container' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div className='header__logo' style={{ fontSize: '60px', fontWeight: 'bold' }}>
-                    <i className="fa-brands fa-canadian-maple-leaf" style={{ fontSize: '60px', color: '#1677ff' }}></i>
+                {/* <FontAwesomeIcon icon={faCanadianMapleLeaf} /> */}
                     Feduu
                 </div>
 
@@ -34,7 +34,8 @@ function Header() {
 
                 <div className='header__control' style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
                     <div className='header__account'>
-                        <i className="fa-solid fa-user" style={{ fontSize: '30px', padding: '0 8px' }}></i>
+                   
+                        <FontAwesomeIcon icon={faUser} style={{ fontSize: '30px', padding: '0 8px' }}/>
                         <div className='header__account__text' style={{
                             display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
                         }}>
@@ -42,9 +43,10 @@ function Header() {
                             <a href='/account' style={{ display: 'block' }}>Username</a>
                         </div>
                     </div>
-
+                    
                     <div className='header__cart'>
                         <i className="fa-sharp fa-solid fa-bag-shopping" style={{ fontSize: '30px', padding: '0 8px' }}></i>
+                        <FontAwesomeIcon icon={faBagShopping} style={{ fontSize: '30px', padding: '0 8px' }}/>
                         <div className='header__cart__text' style={{
                             display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
                         }}>
