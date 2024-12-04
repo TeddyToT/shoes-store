@@ -117,7 +117,7 @@ function PaymentInfoForm() {
                                     }}
                                 >
                                     <DollarOutlined style={{ fontSize: '24px', color: '#fadb14' }} />
-                                    <span style={{ display: 'block', marginTop: '8px' }}>Thanh toán tiền mặt</span>
+                                    <span style={{ display: 'block', marginTop: '8px' }}>Thanh toán khi nhận hàng</span>
                                 </Card>
                             </Col>
                             <Col span={12}>

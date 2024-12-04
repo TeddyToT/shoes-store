@@ -25,17 +25,21 @@ function UserInfoForm() {
     return (
         <Form
             labelAlign='left'
-            name="basic"
             labelCol={{
-                span: 6,
+                xs: { span: 24 },
+                sm: { span: 8 },
+                md: { span: 6 }
             }}
             wrapperCol={{
-                span: 14,
+                xs: { span: 24 },
+                sm: { span: 16 },
+                md: { span: 14 }
             }}
             style={{
-                maxWidth: 600,
+                width: '100%',
+                maxWidth: '800px', // Tăng maxWidth
                 margin: 'auto',
-
+                padding: '20px 0'
             }}
             initialValues={{
                 remember: true,
@@ -45,7 +49,7 @@ function UserInfoForm() {
             autoComplete="off"
         >
             <Form.Item
-                label={<span style={{ fontSize: '20px', fontWeight: 'bold' }}>Họ và tên</span>}
+                label={<span style={{ fontSize: '22px', fontWeight: '600' }}>Họ và tên</span>}
                 name="name"
                 rules={[
                     {
@@ -54,11 +58,19 @@ function UserInfoForm() {
                     },
                 ]}
             >
-                <Input placeholder='Họ và tên' />
+                <Input
+                    placeholder='Họ và tên'
+                    style={{
+                        height: '45px',
+                        fontSize: '18px',
+                        borderRadius: '8px',
+                        padding: '8px 16px'
+                    }}
+                />
             </Form.Item>
 
             <Form.Item
-                label={<span style={{ fontSize: '20px', fontWeight: 'bold' }}>Số điện thoại</span>}
+                label={<span style={{ fontSize: '22px', fontWeight: '600' }}>Số điện thoại</span>}
                 name="sdt"
                 rules={[
                     {
@@ -67,11 +79,19 @@ function UserInfoForm() {
                     },
                 ]}
             >
-                <Input placeholder='Số điện thoại' />
+                <Input
+                    placeholder='Số điện thoại'
+                    style={{
+                        height: '45px',
+                        fontSize: '18px',
+                        borderRadius: '8px',
+                        padding: '8px 16px'
+                    }}
+                />
             </Form.Item>
 
             <Form.Item
-                label={<span style={{ fontSize: '20px', fontWeight: 'bold' }}>Email</span>}
+                label={<span style={{ fontSize: '22px', fontWeight: '600' }}>Email</span>}
                 name="email"
                 rules={[
                     {
@@ -80,11 +100,19 @@ function UserInfoForm() {
                     },
                 ]}
             >
-                <Input placeholder='Email' />
+                <Input
+                    placeholder='Email'
+                    style={{
+                        height: '45px',
+                        fontSize: '18px',
+                        borderRadius: '8px',
+                        padding: '8px 16px'
+                    }}
+                />
             </Form.Item>
 
             <Form.Item
-                label={<span style={{ fontSize: '20px', fontWeight: 'bold' }}>Ngày sinh</span>}
+                label={<span style={{ fontSize: '22px', fontWeight: '600' }}>Ngày sinh</span>}
                 name="birthday"
                 rules={[
                     {
@@ -93,17 +121,41 @@ function UserInfoForm() {
                     },
                 ]}
             >
-
-                <DatePicker placeholder='dd/mm/yy' format={'DD/MM/YYYY'} />
+                <DatePicker
+                    placeholder='dd/mm/yy'
+                    format={'DD/MM/YYYY'}
+                    style={{
+                        height: '45px',
+                        fontSize: '18px',
+                        borderRadius: '8px',
+                        padding: '8px 16px',
+                        width: '100%'
+                    }}
+                />
             </Form.Item>
 
             <Form.Item
                 wrapperCol={{
-                    offset: 14,
-                    span: 16,
+                    xs: { offset: 0, span: 24 },
+                    sm: { offset: 8, span: 16 },
+                    md: { offset: 6, span: 14 }
                 }}
+                style={{ marginTop: '32px' }}
             >
-                <Button type="primary" htmlType="submit" size='large'>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{
+                        height: '50px',
+                        fontSize: '20px',
+                        fontWeight: '600',
+                        padding: '0 32px',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
                     Cập nhật thông tin
                 </Button>
             </Form.Item>
