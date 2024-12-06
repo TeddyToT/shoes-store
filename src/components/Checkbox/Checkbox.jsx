@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const Checkbox = ({ dropdownName, options, selectedOptions, setSelectedOptions }) => {
-  
+
     const [localSelectedOptions, setLocalSelectedOptions] = useState([...selectedOptions]);
 
     useEffect(() => {

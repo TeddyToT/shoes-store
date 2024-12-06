@@ -30,5 +30,5 @@ const items = [
         label: 'Liên hệ',
     }
 ];
-const Navbar = () => <Tabs tabBarStyle={{ margin: '0' }} defaultActiveKey="1" size='large' items={items} onChange={onChange} />;
+const Navbar = () => <Tabs tabBarStyle={{ margin: '0' }} justifycontent='center' defaultActiveKey="1" size='large' items={items} onChange={onChange} />;
 export default Navbar;
