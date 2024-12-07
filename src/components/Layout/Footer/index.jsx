@@ -2,7 +2,7 @@
 import { Button, Input, Layout } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMeteor, faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
-
+import { Link } from 'react-router-dom';
 function Footer() {
     const { Footer } = Layout;
     return (
@@ -156,14 +156,14 @@ function Footer() {
                             >Trang chủ</a>
                         </li>
                         <li className="footer__product__list__item" style={{ marginBottom: '8px' }}>
-                            <a href='/'
+                            <Link to="/gioi-thieu"
                                 style={{
                                     color: '#666',
-                                    transition: 'color 0.2s ease' // Thêm transition cho smooth hover
+                                    transition: 'color 0.2s ease'
                                 }}
-                                onMouseEnter={(e) => e.target.style.color = 'rgb(22, 119, 255)'}
-                                onMouseLeave={(e) => e.target.style.color = '#666'}
-                            >Giới thiệu</a>
+                                // onMouseEnter={(e) => e.target.style.color = 'rgb(22, 119, 255)'}
+                                // onMouseLeave={(e) => e.target.style.color = '#666'}
+                            >Giới thiệu</Link>
                         </li>
                         <li className="footer__product__list__item" style={{ marginBottom: '8px' }}>
                             <a href='/'
