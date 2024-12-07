@@ -63,3 +63,5 @@
 body {
   background-color: #cbd5e1;
 }
+
+input::-ms-reveal { display: none; }

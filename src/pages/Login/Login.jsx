@@ -6,6 +6,7 @@ import { CiUser, CiLock } from "react-icons/ci";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Layout } from "antd";
 import { toast } from "react-toastify";
+
 import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
@@ -47,17 +48,11 @@ const Login = () => {
       username: userName,
       password: password
     }
-    // ,{
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Access-Control-Allow-Origin' : '*',
-    //     'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    //   }}
   )
       .then((res) => {
         console.log(res);
         if (res.data.success === false) {
-          // localStorage.clear();
+          localStorage.clear();
           toast.error('Sai tên đăng nhập hoặc mật khẩu', {
             position: "top-right",
             autoClose: 2000,
@@ -80,6 +75,7 @@ const Login = () => {
             progress: undefined,
             theme: "light",
             onClose: ()=> {
+              localStorage.setItem('id', res.data.userId)
               navigate("/");
             }
             });

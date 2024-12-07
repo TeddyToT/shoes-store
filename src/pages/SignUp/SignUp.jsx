@@ -114,7 +114,7 @@ const SignUp = () => {
                       type={showPassword2 ? "text" : "password"}
                       value={password2}
                       onChange={(e)=> setPassword2(e.target.value)}
-                      placeholder="Nhập mật khẩu"
+                      placeholder="Nhập lại mật khẩu"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-16 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none"
                     />
 
