@@ -13,6 +13,8 @@ import {
 import { useState, useEffect } from 'react';
 
 function Header() {
+    const userID = localStorage.getItem("id")
+    
     const { Header } = Layout;
     const { Search } = Input;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -191,10 +193,22 @@ function Header() {
                 <div style={styles.headerControl}>
                     <div style={styles.accountCart}>
                         <FontAwesomeIcon icon={faUser} style={styles.icon} />
-                        <div style={styles.textContainer}>
-                            <h5 style={styles.heading}>Tài khoản</h5>
-                            <a href="/account" style={styles.link}>Username</a>
-                        </div>
+                        
+                            {userID?(
+                                <div style={styles.textContainer}>
+                                <h5 style={styles.heading}>Tài khoản</h5>
+                                <a href="/account" style={styles.link}>Username</a>
+                                </div>
+                            )
+                            :
+                            (
+                                <div style={styles.textContainer}>  
+                            <a href="/dang-nhap" style={styles.link}>Đăng nhập</a>
+                            </div>
+                            )
+                        }
+                            
+                        
                     </div>
 
                     <div style={styles.accountCart}>
