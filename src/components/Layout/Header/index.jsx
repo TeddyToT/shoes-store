@@ -1,6 +1,8 @@
 import { Layout, Input } from 'antd';
+
 import Navbar from '../../Mini_components/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     faUser,
     faBagShopping,
@@ -16,12 +18,26 @@ function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+    const [query, setQuery] = useState("")
     useEffect(() => {
         const handleResize = () => setWindowWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+    const navigate = useNavigate();
 
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            navigate(`/tim-kiem?query=${query}`);
+            setQuery("");  
+        }
+    };
+    
+    const handleSearchOnclick = () => {
+        navigate(`/tim-kiem?query=${query}`);
+        setQuery(""); 
+    };
+    
     const styles = {
         header: {
             position: 'sticky',
@@ -157,10 +173,13 @@ function Header() {
                 <div style={styles.searchNav}>
                     <div style={styles.searchContainer}>
                         <Search
+                        value={query}
+                        onChange={(e)=>setQuery(e.target.value)}
                             size="large"
                             placeholder="Tìm kiếm sản phẩm"
-                            onSearch={(value, _e, info) => console.log(info?.source, value)}
+                            onSearch={handleSearchOnclick}
                             enterButton
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                     <div>

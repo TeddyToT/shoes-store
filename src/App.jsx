@@ -4,12 +4,17 @@ import './App.css'
 import { publicRoutes } from './Routes';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
+import { AppProvider } from './AppContexts/Contexts';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
 
 
   return (
     <>
       <BrowserRouter>
+      <ToastContainer/>
+      <AppProvider>
         <Header />
         <Routes>
           {publicRoutes.map((route, index) => {
@@ -18,6 +23,7 @@ function App() {
           })}
         </Routes>
         <Footer />
+        </AppProvider>
       </BrowserRouter>
 
 

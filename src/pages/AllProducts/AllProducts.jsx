@@ -1,20 +1,21 @@
 import { useState, useEffect } from "react";
 
-import { useSearchParams } from 'react-router-dom';
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import Item from "../../components/Item.jsx";
 import Pagination from "../../components/Pagination/Pagination.jsx";
+import Checkbox from "../../components/Checkbox/Checkbox.jsx";
 
+import RadioCheckBox from "../../components/Checkbox/RadioCheckbox.jsx";
 
 import "../../hideScrollbar.css";
 
-const Search = () => {
+const AllProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
 
-  
-//   const [searchParams] = useSearchParams();
-//   const query = searchParams.get('query');
-
+  const [query, setQuery] = useState("");
+  const [categoriesOptions, setCategoriesOptions] = useState([]);
+  const [brandOption, setBrandOption] = useState();
 
   const products = [
     {
@@ -289,13 +290,49 @@ const Search = () => {
     },
   ];
 
+  const brands = [
+    {
+      _id: 1,
+      name: "Nike",
+    },
+    {
+      _id: 2,
+      name: "Adidas",
+    },
+    {
+      _id: 3,
+      name: "NewBalance",
+    },
+    {
+      _id: 4,
+      name: "Bitis",
+    },
+  ];
+  const categories = [
+    {
+      _id: 1,
+      name: "Life Style",
+    },
+    {
+      _id: 2,
+      name: "Đá banh",
+    },
+    {
+      _id: 3,
+      name: "Chạy bộ",
+    },
+    {
+      _id: 4,
+      name: "Golf",
+    },
+  ];
 
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('query');
   const [searchProduct, setSearchProduct] = useState([]);
+  const [searchProduct2, setSearchProduct2] = useState([]);
 
-
-
+  useEffect(() => {
+    setCurrentPage(1); // Reset to the first page when search or filters change
+  }, [query, categoriesOptions, brandOption]);
 
   useEffect(() => {
     let temp = [];
@@ -306,34 +343,124 @@ const Search = () => {
       if (isMatch) temp.push(products[i]);
     }
     setSearchProduct(temp);
+    setSearchProduct2(temp);
+  }, [query]);
 
-  }, [products, query]);
+  useEffect(() => {
+    let temp = [];
+    setSearchProduct(searchProduct2); // Khởi tạo lại dữ liệu tìm kiếm
 
+    for (let i = 0; i < searchProduct2.length; i++) {
+      let count = 0;
+
+      for (let j = 0; j < categoriesOptions.length; j++) {
+        if (searchProduct2[i].categories.includes(categoriesOptions[j].name)) {
+          count += 1;
+        }
+      }
+
+      if (count === categoriesOptions.length) {
+        temp.push(searchProduct2[i]);
+      }
+    }
+
+    setSearchProduct(temp);
+  }, [categoriesOptions, searchProduct2]);
+
+  useEffect(() => {
+    let temp = [...searchProduct2]; // Lấy dữ liệu từ kết quả tìm kiếm ban đầu
+
+    // Lọc theo danh mục
+    if (categoriesOptions.length > 0) {
+      temp = temp.filter((product) =>
+        categoriesOptions.every((category) =>
+          product.categories.includes(category.name)
+        )
+      );
+    }
+
+    // Lọc theo thương hiệu
+    if (brandOption) {
+      temp = temp.filter((product) => product.brand === brandOption.name);
+    }
+
+    setSearchProduct(temp); // Cập nhật danh sách sản phẩm hiển thị
+  }, [categoriesOptions, brandOption, searchProduct2]);
 
   const paginatedProducts = searchProduct.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+  const handleClearFilters = () => {
+    setQuery(""); // Xóa từ khóa tìm kiếm
+    setCategoriesOptions([]); // Bỏ chọn danh mục
+    setBrandOption(null); // Bỏ chọn thương hiệu
+    setSearchProduct(products); // Đặt lại danh sách sản phẩm về mặc định
+  };
 
-
-//   const handleKeyDown = (event) => {
-//     if (event.key === "Enter") {
-//       setQuery(event.target.value);
-//     }
-//   };
+  const handleInputChange = (event) => {
+    setQuery(event.target.value);
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      setQuery(event.target.value);
+    }
+  };
 
   const totalPages = Math.ceil(searchProduct.length / itemsPerPage);
   return (
-    <div className=" w-full h-auto flex justify-center place-self-center pb-[10vh] pt-7 ">
+    <div className="bg-slate-300 w-full h-auto flex justify-center place-self-center pb-[10vh] pt-7 ">
       <div className="w-11/12">
         <div className="flex flex-col h-full ">
-         
-            <div className="md:w-4/5 w-full  flex flex-col justify-center place-self-center">
-            <h2 className="mb-5 text-2xl">
-            Có {searchProduct.length} sản phẩm theo kết quả tìm kiếm {`"${query}"`}
-            </h2>
+          <div className="w-full flex flex-row gap-2">
+            <div className=" md:flex flex-col w-1/4 justify-stretch content-center gap-3">
+              <div className=" w-2/3  flex flex-row border rounded-lg bg-zinc-200 p-2">
+                <form
+                  className="w-full"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                  action="#"
+                  method="POST"
+                >
+                  <div className="flex flex-row items-center w-full ">
+                    <FaMagnifyingGlass className="basis-1/12" />
+                    <input
+                      type="text"
+                      placeholder="Tìm tên sản phẩm"
+                      value={query}
+                      onChange={handleInputChange}
+                      onKeyDown={handleKeyDown}
+                      className=" ml-2 basis-5/6 bg-transparent font-medium focus:outline-none text-left "
+                    />
+                  </div>
+                </form>
+              </div>
+              <Checkbox
+                dropdownName="Thể loại giày"
+                options={categories}
+                selectedOptions={categoriesOptions}
+                setSelectedOptions={setCategoriesOptions}
+              />
+              {/* <DropdownRadio dropdownName="Loại" options={type} /> */}
+              <RadioCheckBox
+                dropdownName="Hãng giày"
+                options={brands}
+                selectedOption={brandOption}
+                setSelectedOption={setBrandOption}
+              />
+              <div className="pl-3 pt-3 w-[50%]">
+                <button
+                  onClick={handleClearFilters}
+                  className=" w-full rounded-md border border-gray-500  px-4 py-2 text-sm font-medium text-gray-700 bg-zinc-400 hover:bg-sky-600"
+                >
+                  Xóa bộ lọc
+                </button>
+              </div>
+            </div>
+            <div className="md:w-4/5 w-full  flex flex-col">
               {paginatedProducts.length > 0 ? (
-                <div className="col-span-3 grid grid-cols-5 gap-5">
+                <div className="col-span-3 grid grid-cols-4 gap-5">
                   {paginatedProducts.map((value, index) => (
                     <Item key={index} value={value} />
                   ))}
@@ -351,10 +478,10 @@ const Search = () => {
                 />
               )}
             </div>
-          
+          </div>
         </div>
       </div>
     </div> 
   );
 };
-export default Search;
+export default AllProducts;

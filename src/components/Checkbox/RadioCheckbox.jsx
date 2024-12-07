@@ -17,7 +17,7 @@ const RadioCheckBox = ({ dropdownName, options, selectedOption, setSelectedOptio
     
 
     return (
-        <div className="pt-1 w-full inline-block text-left">
+        <div className="pt-1 w-2/3 inline-block text-left">
             <div className="bg-zinc-300 rounded-t-lg">
                 <label
                     className="inline-flex justify-between w-full rounded-t-md bg-white px-4 py-2 text-lg font-medium text-gray-700"
