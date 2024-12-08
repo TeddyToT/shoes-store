@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react';
 
 function Header() {
     const userID = localStorage.getItem("id")
-    
+
     const { Header } = Layout;
     const { Search } = Input;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,15 +31,15 @@ function Header() {
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
             navigate(`/tim-kiem?query=${query}`);
-            setQuery("");  
+            setQuery("");
         }
     };
-    
+
     const handleSearchOnclick = () => {
         navigate(`/tim-kiem?query=${query}`);
-        setQuery(""); 
+        setQuery("");
     };
-    
+
     const styles = {
         header: {
             position: 'sticky',
@@ -175,8 +175,8 @@ function Header() {
                 <div style={styles.searchNav}>
                     <div style={styles.searchContainer}>
                         <Search
-                        value={query}
-                        onChange={(e)=>setQuery(e.target.value)}
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
                             size="large"
                             placeholder="Tìm kiếm sản phẩm"
                             onSearch={handleSearchOnclick}
@@ -193,29 +193,29 @@ function Header() {
                 <div style={styles.headerControl}>
                     <div style={styles.accountCart}>
                         <FontAwesomeIcon icon={faUser} style={styles.icon} />
-                        
-                            {userID?(
-                                <div style={styles.textContainer}>
+
+                        {userID ? (
+                            <div style={styles.textContainer}>
                                 <h5 style={styles.heading}>Tài khoản</h5>
                                 <a href="/account" style={styles.link}>Username</a>
-                                </div>
-                            )
+                            </div>
+                        )
                             :
                             (
-                                <div style={styles.textContainer}>  
-                            <a href="/dang-nhap" style={styles.link}>Đăng nhập</a>
-                            </div>
+                                <div style={styles.textContainer}>
+                                    <a href="/dang-nhap" style={styles.link}>Đăng nhập</a>
+                                </div>
                             )
                         }
-                            
-                        
+
+
                     </div>
 
                     <div style={styles.accountCart}>
                         <FontAwesomeIcon icon={faBagShopping} style={styles.icon} />
                         <div style={styles.textContainer}>
                             <h5 style={styles.heading}>Giỏ hàng</h5>
-                            <a href="/" style={styles.link}>Số sản phẩm</a>
+                            <a href="/cart" style={styles.link}>Số sản phẩm</a>
                         </div>
                     </div>
                 </div>

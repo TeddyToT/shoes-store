@@ -1,28 +1,45 @@
 
 import { Typography, Table, InputNumber, Button, Divider, Input, Row, Col } from "antd";
 import { CloseCircleOutlined } from "@ant-design/icons";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const { Text } = Typography;
 
 const CartInfoList = () => {
+    const [cartData, setCartData] = useState([]);
+    const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
-    const cartData = [
-        {
-            key: "1",
-            name: "Rau xà lách",
-            price: 30000,
-            quantity: 2,
-            image: "https://placehold.jp/75x75.png",
-        },
-        {
-            key: "2",
-            name: "Đùi gà tỏi",
-            price: 70000,
-            quantity: 1,
-            image: "https://placehold.jp/75x75.png",
-        },
-    ];
+    useEffect(() => {
+        if (userId) { // Chỉ fetch khi có userId
+            fetchCartData();
+        }
+    }, [userId]);
 
+    const navigate = useNavigate();
+    const handleOrderClick = () => {
+        navigate('/payment');
+    };
+
+    const fetchCartData = async () => {
+        try {
+            const response = await fetch(`http://localhost/be-shopbangiay/api/cart.php?userId=${userId}`);
+            const data = await response.json();
+
+            const transformedData = data.map(item => ({
+                key: item.cartId,
+                name: item.productId.name,
+                price: Number(item.productId.price),
+                quantity: Number(item.quantity),
+                image: item.productId.mainImage,
+            }));
+
+            setCartData(transformedData);
+        } catch (error) {
+            console.error('Error fetching cart data:', error);
+        }
+    };
     const handleRemoveItem = () => {
 
     };
@@ -34,18 +51,45 @@ const CartInfoList = () => {
             dataIndex: "name",
             key: "name",
             render: (text, record) => (
-                <div style={{ display: "flex", alignItems: "center", }}>
-                    <CloseCircleOutlined style={{ fontSize: '24px', margin: '20px' }} onClick={() => handleRemoveItem()} />
-                    <div style={{ display: 'flex', alignItems: "center", justifyContent: "center", flex: '1' }}>
-                        <img src={record.image} alt={text} style={{ width: 50, height: 50, margin: '10px' }} />
-                        <div>
-                            <Text>{text}</Text>
-                            <br />
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                }}>
+                    <CloseCircleOutlined
+                        style={{
+                            fontSize: '24px',
+                            marginRight: '20px',
+                            flex: '0 0 auto'
+                        }}
+                        onClick={() => handleRemoveItem()}
+                    />
+                    <div style={{
+                        display: 'flex',
+                        alignItems: "center",
+                        flex: '1',
+                    }}>
+                        <img
+                            src={record.image}
+                            alt={text}
+                            style={{
+                                width: 50,
+                                height: 50,
+                                marginRight: '10px',
+                                flex: '0 0 auto'
+                            }}
+                        />
+                        <div style={{
+                            flex: '1',
+                            minWidth: 0
+                        }}>
+                            <Text style={{ display: 'block' }}>{text}</Text>
                             <Text type="secondary">{record.price.toLocaleString()}đ</Text>
                         </div>
                     </div>
                 </div>
             ),
+            width: '50%',
         },
         {
             title: <div style={{ fontSize: 20, fontWeight: 700, textAlign: "center" }}>Số lượng</div>,
@@ -64,7 +108,9 @@ const CartInfoList = () => {
             dataIndex: "price",
             key: "total",
             render: (text, record) => (
-                <Text style={{ display: 'block', textAlign: "center", fontWeight: 500, fontSize: 16 }}>{(record.price * record.quantity).toLocaleString()}đ</Text>
+                <Text style={{ display: 'block', textAlign: "center", fontWeight: 500, fontSize: 16 }}>
+                    {(record.price * record.quantity).toLocaleString()}đ
+                </Text>
             ),
         },
     ];
@@ -79,16 +125,13 @@ const CartInfoList = () => {
                     columns={columns}
                     dataSource={cartData}
                     pagination={false}
-                    summary={() => (
-                        <Table.Summary.Row>
-                            <Table.Summary.Cell colSpan={3}>
-                                <Text strong style={{ float: "right", fontSize: 20 }}>
-                                    Tổng: {totalPrice.toLocaleString()}đ
-                                </Text>
-                            </Table.Summary.Cell>
-                        </Table.Summary.Row>
-                    )}
+                    scroll={{ y: 400 }} // Thêm thanh cuộn dọc
                 />
+                <div style={{ textAlign: 'right', margin: '20px' }}>
+                    <Text strong style={{ fontSize: 20 }}>
+                        Tổng: {totalPrice.toLocaleString()}đ
+                    </Text>
+                </div>
             </Col>
 
             <Col span={8}>
@@ -101,7 +144,10 @@ const CartInfoList = () => {
                     <Divider />
                     <Text style={{ fontSize: 20, fontWeight: 600 }}>TỔNG TIỀN:</Text>
                     <Text strong style={{ fontSize: "20px", float: "right" }}>{totalPrice.toLocaleString()}đ </Text>
-                    <Button type="primary" block style={{ marginTop: "20px" }}>
+                    <Button type="primary" block
+                        style={{ marginTop: "20px" }}
+                        onClick={handleOrderClick}
+                    >
                         Đặt hàng
                     </Button>
                 </div>

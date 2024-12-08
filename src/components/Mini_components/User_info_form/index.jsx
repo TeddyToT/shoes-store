@@ -1,29 +1,85 @@
-
 import { Button, DatePicker, notification, Form, Input } from 'antd';
+import { useState, useEffect } from 'react';
+import moment from 'moment';
 
 function UserInfoForm() {
+    const [form] = Form.useForm();
+    const [userData, setUserData] = useState(null);
+    const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
-    const onFinish = (values) => {
-        notification.success({
-            message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
-            description: 'Cập nhật thông tin thành công!',
-            showProgress: true,
+    useEffect(() => {
+        if (userId) { // Chỉ fetch khi có userId
+            fetchUserData();
+        }
+    }, [userId]);
 
-        });
-        console.log(values);
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost/be-shopbangiay/api/user.php?userId=${userId}`);
+            const data = await response.json();
 
+            // Cập nhật form với dữ liệu từ API
+            form.setFieldsValue({
+                name: data.name,
+                sdt: data.phone,
+                email: data.email,
+                birthday: data.birthday ? moment(data.birthday, 'DD/MM/YYYY') : null
+            });
+
+            setUserData(data);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            notification.error({
+                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                description: 'Không thể tải thông tin người dùng!',
+                showProgress: true,
+            });
+        }
     };
-    const onFinishFailed = (errorInfo) => {
-        notification.error({
-            message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-            description: 'Cập nhật dữ liệu thất bại!',
-            showProgress: true,
-        });
-        console.log(errorInfo);
-    };
 
+    const onFinish = async (values) => {
+        // Tạo một bản sao của values để không ảnh hưởng đến form gốc
+        const formattedValues = { ...values };
+
+        // Chuyển đổi trường birthday từ Moment object sang string format dd/mm/yyyy
+        if (formattedValues.birthday) {
+            formattedValues.birthday = formattedValues.birthday.format('DD/MM/YYYY');
+        }
+
+        // Thêm userId vào dữ liệu gửi đi
+        formattedValues.userId = userId;
+
+        try {
+            // Gửi API với dữ liệu đã được format
+            const response = await fetch('http://localhost/be-shopbangiay/api/user.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formattedValues),
+            });
+
+            if (response.ok) {
+                notification.success({
+                    message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
+                    description: 'Cập nhật thông tin thành công!',
+                    showProgress: true,
+                });
+            } else {
+                throw new Error('Failed to update user info');
+            }
+        } catch (error) {
+            console.error('Error updating user data:', error);
+            notification.error({
+                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                description: 'Cập nhật dữ liệu thất bại!',
+                showProgress: true,
+            });
+        }
+    };
     return (
         <Form
+            form={form}
             labelAlign='left'
             labelCol={{
                 xs: { span: 24 },
@@ -37,15 +93,11 @@ function UserInfoForm() {
             }}
             style={{
                 width: '100%',
-                maxWidth: '800px', // Tăng maxWidth
+                maxWidth: '800px',
                 margin: 'auto',
                 padding: '20px 0'
             }}
-            initialValues={{
-                remember: true,
-            }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
             <Form.Item
