@@ -185,7 +185,7 @@ function UserInfoForm() {
                 ]}
             >
                 <DatePicker
-                    placeholder='dd/mm/yy'
+                    placeholder='dd/mm/yyyy'
                     format={'DD/MM/YYYY'}
                     style={{
                         height: '45px',

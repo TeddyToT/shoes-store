@@ -6,15 +6,15 @@ const Breadcrumb = ({ pageName, items }) => {
   const breadcrumbs = items || [{ name: 'Trang chủ', href: '/' }, { name: pageName || '' }];
 
   return (
-    <div className="flex items-center mt-3 ">
-      <div className="flex items-center">
+    <div className="flex  items-center mt-3 ">
+      <div className="flex group items-center">
         <FontAwesomeIcon
           icon={faHouse}
-          className="text-xl mx-2"
+          className="text-xl mx-3 group-hover:text-blue-500"
         />
         <Link
           to="/"
-          className="text-lg font-bold hover:text-blue-500"
+          className="text-lg font-bold group-hover:text-blue-500"
         >
           Trang chủ
         </Link>
@@ -22,10 +22,10 @@ const Breadcrumb = ({ pageName, items }) => {
 
       {/* Các mục tiếp theo */}
       {breadcrumbs.slice(1).map((item, index) => (
-        <div key={index} className="flex items-center ml-2">
+        <div key={index} className="flex items-center ml-3">
           <FontAwesomeIcon
             icon={faChevronRight}
-            className="text-lg mx-2"
+            className="text-lg mr-3"
           />
           {item.href ? (
             <Link
