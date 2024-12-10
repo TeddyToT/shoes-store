@@ -7,15 +7,14 @@ import SwiperNavControl from "./SwiperNavControl";
 
 
 
-const RecommentItem = ({items}) => {
+const ItemSwiper = ({items}) => {
 
       
 
     return (
         <>
             
-                <div className="w-11/12 ">
-                    <p className="font-bold text-3xl text-center">SẢN PHẨM LIÊN QUAN</p>
+                <div className="w-full">
                     <div className="mt-5">
                         <Swiper
                             slidesPerView={2}
@@ -51,4 +50,4 @@ const RecommentItem = ({items}) => {
     );
 }
 
-export default RecommentItem;
+export default ItemSwiper;

@@ -1,21 +1,28 @@
 import React, { useState } from "react";
-
-
-
+import { useNavigate } from "react-router-dom";
 const Item = ({ value }) => {
-  const formatNumber = (number) => {
-    return new Intl.NumberFormat("de-DE").format(number);
+  const generateSlug = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/ /g, "-") // Thay khoảng trắng bằng dấu gạch ngang
+      .replace(/[^a-z0-9-]/g, ""); // Loại bỏ ký tự đặc biệt
   };
+
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat("vi-VN").format(number);
+  };
+  const navigate = useNavigate()
   return (
     <>
-      <div
-        className={`w-ful border border-gray-400 bg-white rounded-lg p-4 group   duration-200 cursor-pointer`}
-      >
+       <div
+      onClick={() => navigate(`/san-pham/${generateSlug(value.name)}-${value.productId}`)}
+      className={`w-full border border-gray-400 bg-white rounded-lg p-4 group duration-200 cursor-pointer`}
+    >
         <div className="relative w-full flex items-center justify-center border border-gray-300 rounded-lg mb-5 p-5">
           <img
-            src={value.image}
-            alt="item"
-            className="w-full scale-125 group-hover:scale-150  duration-300"
+            src={value.mainImage}
+            alt={value.name}
+            className=" h-[120px] md:h-[120px] lg:h-[140px] w-[150px] lg:w-[170px] group-hover:scale-125 duration-300"
           />
         </div>
         <div className="w-full">
@@ -23,13 +30,22 @@ const Item = ({ value }) => {
             {value.name}
           </p>
           <div className="flex flex-row items-center justify-between">
-            <div className="flex flex-row items-end gap-1">
-
-                <p className=" text-[#3e3e3e] text-base font-medium group-hover:text-blue-500 ">
-                  {formatNumber(value.price)}đ
-                </p>
-              
-            </div>
+            
+              {value.discount == 0?(
+              <p className=" text-[#3e3e3e] text-base font-medium group-hover:text-blue-500 ">
+                {formatNumber(value.price)}đ
+              </p>
+              ):(
+                <div className="flex flex-row items-end gap-1 justify-between w-3/4">
+              <p className=" text-[#3e3e3e] text-base font-medium group-hover:text-blue-500 ">
+                {formatNumber(value.price -(value.price*value.discount/100))}đ
+              </p>
+              <p className=" text-[#565555] line-through text-base font-medium group-hover:text-blue-500 ">
+                {formatNumber(value.price)}đ
+              </p>
+              </div>
+              )}
+            
           </div>
         </div>
       </div>

@@ -85,15 +85,15 @@ const Login = () => {
       .catch((err) => console(err));
   };
   return (
-    <Layout>
+    <div>
       <Breadcrumb pageName="Đăng nhập" />
 
-      <div className="mt-5 mb-10 rounded-sm border border-strokeshadow-default ">
-        <div className="flex flex-wrap items-center">
-          <div className="hidden w-full xl:block xl:w-1/2">
+      <div className="mt-5 mb-10 rounded-sm border border-stroke shadow-default ">
+        <div className="flex  md:flex-row items-center">
+          <div className="hidden w-full md:block xl:w-1/2">
             <div className="px-26 py-17.5 text-center">
-              <Link className="mb-5.5 inline-block" href="/">
-                <img className="" src={logo} alt="Logo" width={400} />
+              <Link className="mb-5.5 sm:inline-block flex w-[200px] md:w-[350px] lg:w-[400px]" href="/">
+                <img className="" src={logo} alt="Logo"  />
               </Link>
 
               <p className="2xl:px-20">
@@ -160,7 +160,7 @@ const Login = () => {
                   <p>
                     Quên mật khẩu?{" "}
                     <Link
-                      href="/auth/signup"
+                    to={"/dang-nhap/quen-mat-khau"}
                       className="text-cyan-800 hover:text-blue-900"
                     >
                       Lấy lại mật khẩu
@@ -195,7 +195,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 

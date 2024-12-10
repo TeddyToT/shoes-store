@@ -1,7 +1,8 @@
 
 import { Button, DatePicker, notification, Form, Input } from 'antd';
-
+import { useState } from 'react';
 function UserInfoForm() {
+    const [test, setTest] = useState("")
 
     const onFinish = (values) => {
         notification.success({
@@ -44,6 +45,7 @@ function UserInfoForm() {
             initialValues={{
                 remember: true,
             }}
+            
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -122,7 +124,7 @@ function UserInfoForm() {
                 ]}
             >
                 <DatePicker
-                    placeholder='dd/mm/yy'
+                    placeholder='dd/mm/yyyy'
                     format={'DD/MM/YYYY'}
                     style={{
                         height: '45px',
@@ -131,6 +133,9 @@ function UserInfoForm() {
                         padding: '8px 16px',
                         width: '100%'
                     }}
+                    value={test}
+                    onChange={(e)=>setTest(e.target.value)}
+                    
                 />
             </Form.Item>
 
