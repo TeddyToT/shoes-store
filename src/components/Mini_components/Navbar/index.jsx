@@ -28,11 +28,15 @@ const items = [
         key: '6',
         label: <Link to="/lien-he">Liên hệ</Link>,
     },
+    {
+        key: '7',
+        label: <Link to="/*"></Link>,
+    },
 ];
 
 const Navbar = () => (
     <Tabs
-        tabBarStyle={{ margin: '0' }}
+        tabBarStyle={{ margin: '0' }} justifycontent='center'
         justifycontent="center"
         defaultActiveKey="1"
         size="large"

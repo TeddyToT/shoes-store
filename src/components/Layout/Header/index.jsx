@@ -30,13 +30,13 @@ function Header() {
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
-            navigate(`/tim-kiem?query=${query}`);
+            navigate(`/san-pham?query=${query}`);
             setQuery("");  
         }
     };
     
     const handleSearchOnclick = () => {
-        navigate(`/tim-kiem?query=${query}`);
+        navigate(`/san-pham?query=${query}`);
         setQuery(""); 
     };
     

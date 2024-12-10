@@ -12,6 +12,8 @@ import SignUp from "../pages/SignUp/SignUp"
 import Search from "../pages/Search/Search"
 import Introduce from "../pages/About/About"
 import Contact from "../pages/Contact/Contact"
+import ForgotPassowrd from "../pages/ForgortPassword/ForgotPassword"
+import ConfirmNewPassword from "../pages/ForgortPassword/ConfirmNewPassword"
 const publicRoutes = [
     { path: '/', conponent: Home },
     { path: '/order-detail', conponent: OrderDetail },
@@ -22,10 +24,12 @@ const publicRoutes = [
     { path: '/ordertracking', conponent: OrderTracking },
 
 
-    {path:"/san-pham/:id", conponent: ItemDetails},
+    {path:"/san-pham/:slugId", conponent: ItemDetails},
     {path:"/san-pham", conponent: AllProducts},
     {path:"/dang-nhap", conponent: Login},
     {path:"/dang-ky", conponent: SignUp},
+    {path:"/dang-nhap/quen-mat-khau", conponent: ForgotPassowrd},
+    {path:"/dang-nhap/quen-mat-khau/xac-nhan", conponent: ConfirmNewPassword},
     {path:"/tim-kiem", conponent: Search},
     {path:"/gioi-thieu", conponent: Introduce},
     {path:"/lien-he", conponent: Contact},

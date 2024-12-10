@@ -1,6 +1,7 @@
 
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { CgKey } from "react-icons/cg";
 
 export const DataContexts = createContext({})
 
@@ -12,6 +13,8 @@ export const AppProvider = ({ children }) => {
     const [manufacturers, setManufacturers] = useState([]);
     const [orders, setOrders] = useState([]);
     const [carts, setCarts] = useState([]);
+    const [shop, setShop] = useState([]);
+    const [banners, setBanners] = useState([]);
     
     
     
@@ -81,6 +84,26 @@ export const AppProvider = ({ children }) => {
                 console.log(err);
             });
     };
+    const fetchShop= () => {
+        axios.get("http://localhost/be-shopbangiay/api/shop.php")
+            .then((res) => {
+                
+                setShop(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+    const fetchBanners= () => {
+        axios.get("http://localhost/be-shopbangiay/api/banner.php")
+            .then((res) => {
+                
+                setBanners(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     useEffect(() => {
         fetchProducts();
@@ -89,6 +112,9 @@ export const AppProvider = ({ children }) => {
         fetchOrders();
         fetchManufacturers();
         fetchCarts();
+        fetchShop();
+        fetchBanners();
+        
     }, []);
     
     return (
@@ -98,8 +124,9 @@ export const AppProvider = ({ children }) => {
             users, setUsers, fetchUsers,
             orders, setOrders, fetchOrders,
             manufacturers, setManufacturers, fetchManufacturers,
-            carts, setCarts, fetchCarts
-            
+            carts, setCarts, fetchCarts,
+            shop, setShop, fetchShop,
+            banners, setBanners, fetchBanners
         }}>
             {children}
         </DataContexts.Provider>
