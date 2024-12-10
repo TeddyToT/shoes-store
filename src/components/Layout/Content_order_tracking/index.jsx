@@ -1,11 +1,156 @@
-import { Layout } from 'antd'
+import { Layout, Tabs } from 'antd';
 import UserOptionMenu from '../../Mini_components/User_option_menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faChevronRight, faCircleUser } from '@fortawesome/free-solid-svg-icons';
-
+import { useState, useEffect } from 'react';
 
 function ContentOderTracking() {
     const { Content } = Layout;
+    const { TabPane } = Tabs;
+    const [userData, setUserData] = useState(null);
+    const [orders, setOrders] = useState([]);
+
+    const userId = localStorage.getItem('id'); // Lấy id từ localStorage
+
+
+    useEffect(() => {
+        if (userId) {
+            fetchUserData()
+            fetchOrderData();
+        }
+    }, [userId]);
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost/be-shopbangiay/api/user.php?userId=${userId}`);
+            const data = await response.json();
+            setUserData(data);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
+    const fetchOrderData = async () => {
+        try {
+            const response = await fetch(`http://localhost/be-shopbangiay/api/invoice.php?userId=${userId}`);
+            const data = await response.json();
+
+            const transformedStatus = data.map((order) => {
+                order.state = order.state === 'Done' ? 'Đã giao' :
+                    order.state === 'Pending' ? 'Đang giao' : order.state;
+                return order;
+            })
+
+            setOrders(transformedStatus);
+
+        } catch (error) {
+            console.error('Error fetching order data:', error);
+        }
+
+    };
+
+
+    const calculateTotal = (items) => {
+        if (!items) return 0;
+        return items.reduce((sum, item) => {
+            return sum + (Number(item.productId.price) * Number(item.quantity));
+        }, 0);
+    };
+
+    const OrderDetail = ({ order }) => (
+        <div className='oder__tracking__info' style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            fontSize: '18px',
+            fontWeight: '600',
+            border: '1px solid #e0e0e0',
+            margin: '20px',
+            borderRadius: '8px'
+        }}>
+            <div className='oder__main__info' style={{
+                margin: '0 50px 20px 50px',
+                padding: '0 30px'
+            }}>
+                <p style={{ margin: '20px 0 5px', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Mã đơn hàng:</span> <span>#{order.invoiceId}</span>
+                </p>
+                <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Ngày đặt hàng:</span> <span>{order.orderDate}</span>
+                </p>
+                <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Hình thức thanh toán:</span> <span>{order.paymentMethod || 'Tiền mặt'}</span>
+                </p>
+                <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Tình trạng đơn hàng:</span>
+                    <span style={{
+                        color: order.state === 'Đã giao' ? '#52c41a' : '#faad14'
+                    }}>
+                        {order.state}
+                    </span>
+                </p>
+            </div>
+
+            {userData && (
+                <div className='oder__info' style={{
+                    backgroundColor: '#E5E7EB',
+                    margin: '0 60px 20px',
+                    padding: '0 30px 10px'
+                }}>
+                    <h3 style={{ margin: '10px 0 5px', fontWeight: 'bold' }}>Thông tin đặt hàng</h3>
+                    <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Họ tên:</span> <span>{userData.name}</span>
+                    </p>
+                    <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Số điện thoại:</span> <span>{userData.phone}</span>
+                    </p>
+                    <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Địa chỉ:</span> <span>{order.address}</span>
+                    </p>
+                </div>
+            )}
+
+            <div className='cart__info' style={{
+                backgroundColor: '#E5E7EB',
+                margin: '0 60px 20px',
+                padding: '0 30px 10px'
+            }}>
+                <h3 style={{
+                    margin: '10px 0 5px',
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                }}>
+                    <span style={{ fontWeight: 'bold' }}>Thông tin đơn hàng</span>
+                    <span style={{ color: '#1677ff' }}>{calculateTotal(order.items).toLocaleString()}đ</span>
+                </h3>
+                {order.items.map((item, index) => (
+                    <div key={index} className='cart__info__item' style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '10px'
+                    }}>
+                        <img
+                            src={item.productId.mainImage}
+                            alt={item.productId.name}
+                            style={{ width: '80px', height: '72px', objectFit: 'cover' }}
+                        />
+                        <div className="item-info" style={{ flexGrow: '1', marginLeft: '10px' }}>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '14px' }}>{item.productId.name}</p>
+                            <p className="item-quantity" style={{
+                                margin: '4px 0 0 0',
+                                fontWeight: '500',
+                                fontSize: '14px'
+                            }}>Số lượng: {item.quantity}</p>
+                        </div>
+                        <p className="total-price" style={{ fontWeight: '500' }}>
+                            {(Number(item.productId.price) * Number(item.quantity)).toLocaleString()}đ
+                        </p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 
     return (
         <Content style={{
@@ -30,7 +175,7 @@ function ContentOderTracking() {
 
                 <div className="content__user__main" style={{
                     display: 'grid',
-                    gridTemplateColumns: 'minmax(350px, 450px) minmax(600px, 1000px)', // Giống layout account
+                    gridTemplateColumns: 'minmax(350px, 450px) minmax(600px, 1000px)',
                     gap: '40px',
                     padding: 'clamp(24px, 3vw, 32px)',
                     maxWidth: '1500px',
@@ -78,78 +223,10 @@ function ContentOderTracking() {
                             Theo dõi đơn hàng
                         </div>
 
-                        <div className='oder__tracking__info' style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                            fontSize: '18px',
-                            fontWeight: '600',
-                            border: '1px solid #e0e0e0',
-                            margin: '40px',
-                            borderRadius: '8px'
-                        }}>
-                            <div className='oder__main__info' style={{
-                                margin: '0 50px 20px 50px',
-                                padding: '0 30px'
-                            }}>
-                                <p style={{ margin: '20px 0 5px', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>Mã đơn hàng:</span> <span>0923</span>
-                                </p>
-                                <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>Hình thức thanh toán:</span> <span>Tiền mặt</span>
-                                </p>
-                                <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>Tình trạng đơn hàng:</span> <span>Đang chờ xác nhận</span>
-                                </p>
-                            </div>
-
-                            <div className='oder__info' style={{
-                                backgroundColor: '#E5E7EB',
-                                margin: '0 60px 20px',
-                                padding: '0 30px 10px'
-                            }}>
-                                <h3 style={{ margin: '10px 0 5px' }}>Thông tin đặt hàng</h3>
-                                <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>Họ tên:</span> <span>0923</span>
-                                </p>
-                                <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>Số điện thoại:</span> <span>0923</span>
-                                </p>
-                                <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>Địa chỉ:</span> <span>0923</span>
-                                </p>
-                            </div>
-
-                            <div className='cart__info' style={{
-                                backgroundColor: '#E5E7EB',
-                                margin: '0 60px 20px',
-                                padding: '0 30px 10px'
-                            }}>
-                                <h3 style={{
-                                    margin: '10px 0 5px',
-                                    display: 'flex',
-                                    justifyContent: 'space-between'
-                                }}>
-                                    <span>Thông tin đơn hàng</span>
-                                    <span style={{ color: '#1677ff' }}>100.000đ</span>
-                                </h3>
-                                <div className='cart__info__item' style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between'
-                                }}>
-                                    <img src="https://placehold.jp/80x72.png" alt="Rau xà lách" />
-                                    <div className="item-info" style={{ flexGrow: '1', marginLeft: '10px' }}>
-                                        <p style={{ margin: '0 0 4px 0', fontSize: '14px' }}>RAU XÀ LÁCH</p>
-                                        <p className="item-quantity" style={{
-                                            margin: '4px 0 0 0',
-                                            fontWeight: '500',
-                                            fontSize: '14px'
-                                        }}>Số lượng: 6</p>
-                                    </div>
-                                    <p className="total-price" style={{ fontWeight: '500' }}>40.000đ</p>
-                                </div>
-                            </div>
+                        <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                            {orders.map((order, index) => (
+                                <OrderDetail key={order.invoiceId} order={order} />
+                            ))}
                         </div>
                     </div>
                 </div>

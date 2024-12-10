@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import { Menu } from 'antd';
 import { UserOutlined, ShoppingCartOutlined, HistoryOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -110,7 +110,7 @@ function UserOptionMenu() {
                     height: 'auto',
                     borderRadius: '8px',
                 }}
-                onClick={()=>{
+                onClick={() => {
                     localStorage.clear();
                     navigate("/dang-nhap")
                 }}

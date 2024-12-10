@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Form, Input, Card, Typography, Row, Col, notification, Divider } from 'antd';
 import { DollarOutlined, CreditCardOutlined } from '@ant-design/icons';
 
@@ -6,23 +6,113 @@ function PaymentInfoForm() {
 
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [form] = Form.useForm();
+    const [userData, setUserData] = useState(null);
+    const [orderDetails, setOrderDetails] = useState([]);
+    const userId = localStorage.getItem('id');
 
-    // fetch data API
-    const orderDetails = [
-        { name: "RAU XÀ LÁCH", quantity: 2, price: 60000 },
-        { name: "ĐÙI GÀ TỎI", quantity: 1, price: 70000 },
-    ];
+    useEffect(() => {
+        if (userId) {
+            fetchUserData();
+            fetchCartData();
+        }
+    }, [userId]);
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost/be-shopbangiay/api/user.php?userId=${userId}`);
+            const data = await response.json();
+
+            // Cập nhật form với thông tin người dùng
+            form.setFieldsValue({
+                name: data.name,
+                email: data.email,
+                sdt: data.phone,
+                address: data.address
+            });
+
+            setUserData(data);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            notification.error({
+                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                description: 'Không thể tải thông tin người dùng!',
+                showProgress: true,
+            });
+        }
+    };
+
+    const fetchCartData = async () => {
+        try {
+            const response = await fetch(`http://localhost/be-shopbangiay/api/cart.php?userId=${userId}`);
+            const data = await response.json();
+
+            // Transform cart data to order details format
+            const transformedData = data.map(item => ({
+                productId: item.productId.productId,
+                name: item.productId.name,
+                price: Number(item.productId.price),
+                quantity: Number(item.quantity),
+                size: item.size,
+                image: item.productId.mainImage
+            }));
+
+            setOrderDetails(transformedData);
+        } catch (error) {
+            console.error('Error fetching cart data:', error);
+            notification.error({
+                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                description: 'Không thể tải thông tin giỏ hàng!',
+                showProgress: true,
+            });
+        }
+    };
+
     const shippingFee = 30000;
-    const productAmount = orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0)
-    const totalAmount = orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0) + shippingFee;
+    const productAmount = orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const totalAmount = productAmount + shippingFee;
 
-    const onFinish = (values) => {
-        notification.success({
-            message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
-            description: 'Đặt hàng thành công!',
-            showProgress: true,
-        });
-        console.log(values);
+    const onFinish = async (values) => {
+
+        try {
+            // Chuẩn bị dữ liệu gửi đi
+            const orderData = {
+                userId: userId,
+                items: orderDetails.map(item => ({
+                    productId: item.productId,
+                    quantity: item.quantity,
+                    size: item.size
+                })),
+                address: values.address,
+                note: values.note || '',
+                paymentMethod: values.paymentmethod
+            };
+
+            // Gọi API đặt hàng
+            const response = await fetch('http://localhost/be-shopbangiay/api/order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData)
+            });
+
+            if (response.ok) {
+                notification.success({
+                    message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
+                    description: 'Đặt hàng thành công!',
+                    showProgress: true,
+                });
+            } else {
+                throw new Error('Failed to place order');
+            }
+        } catch (error) {
+            console.error('Error placing order:', error);
+            notification.error({
+                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                description: 'Đặt hàng thất bại!',
+                showProgress: true,
+            });
+        }
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -80,19 +170,19 @@ function PaymentInfoForm() {
                     </Form.Item>
 
                     <Form.Item
-                        label={<span style={{ fontSize: '20px', fontWeight: '500' }}>Quận/huyện</span>}
-                        name="district"
-                        rules={[{ required: true, type: 'string', message: 'Vui lòng nhập quận/huyện hợp lệ' }]}
+                        label={<span style={{ fontSize: '20px', fontWeight: '500' }}>Địa chỉ</span>}
+                        name="address"
+                        rules={[{ required: true, type: 'string', message: 'Vui lòng nhập địa chỉ hợp lệ' }]}
                     >
-                        <Input size='large' placeholder='Quận/huyện' />
+                        <Input size='large' placeholder='Địa chỉ' />
                     </Form.Item>
 
                     <Form.Item
-                        label={<span style={{ fontSize: '20px', fontWeight: '500' }}>Xã/phường</span>}
-                        name="ward"
-                        rules={[{ required: true, type: 'string', message: 'Vui lòng nhập xã/phường hợp lệ' }]}
+                        label={<span style={{ fontSize: '20px', fontWeight: '500' }}>Ghi chú</span>}
+                        name="note"
+                        rules={[{ required: false, type: 'string', message: 'Vui lòng nhập xã/phường hợp lệ' }]}
                     >
-                        <Input size='large' placeholder='Xã/phường' />
+                        <Input size='medium' placeholder='Ghi chú' />
                     </Form.Item>
 
                     <div style={{ marginBottom: '8px', fontWeight: '500', fontSize: '20px' }}>
@@ -148,13 +238,23 @@ function PaymentInfoForm() {
                     bordered={false}
                     style={{ borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
                 >
-
                     {orderDetails.map((item, index) => (
                         <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                            <img src="https://placehold.jp/64x60.png" alt="Rau xà lách" />
-                            <div class="item-info" style={{ flexGrow: '1', marginLeft: '10px' }}>
+                            <img
+                                src={item.image}
+                                alt={item.name}
+                                style={{
+                                    width: '64px',
+                                    height: '60px',
+                                    objectFit: 'cover',
+                                    borderRadius: '4px'
+                                }}
+                            />
+                            <div className="item-info" style={{ flexGrow: '1', marginLeft: '10px' }}>
                                 <p style={{ fontWeight: '500', marginBottom: '0' }}>{item.name}</p>
-                                <p style={{ marginTop: '0', fontWeight: '500' }}>Số lượng: {item.quantity}</p>
+                                <p style={{ marginTop: '0', fontWeight: '500' }}>
+                                    Số lượng: {item.quantity} | Size: {item.size}
+                                </p>
                             </div>
                             <p style={{ fontWeight: '500' }}>{(item.price * item.quantity).toLocaleString()}đ </p>
                         </div>
@@ -182,7 +282,7 @@ function PaymentInfoForm() {
                         onClick={() => form.submit()}
                         disabled={!selectedPayment}
                     >
-                        Đặt hàng
+                        Thanh toán
                     </Button>
                 </Card>
             </Col>

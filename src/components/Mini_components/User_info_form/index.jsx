@@ -1,30 +1,96 @@
-
 import { Button, DatePicker, notification, Form, Input } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import moment from 'moment';
+
 function UserInfoForm() {
-    const [test, setTest] = useState("")
+    const [form] = Form.useForm();
+    const [userData, setUserData] = useState(null);
+    const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
-    const onFinish = (values) => {
-        notification.success({
-            message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
-            description: 'Cập nhật thông tin thành công!',
-            showProgress: true,
+    useEffect(() => {
+        if (userId) {
+            fetchUserData();
+        }
+    }, [userId]);
 
-        });
-        console.log(values);
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost/be-shopbangiay/api/user.php?userId=${userId}`);
+            const data = await response.json();
+
+            // Cập nhật form với dữ liệu từ API
+            form.setFieldsValue({
+                name: data.name,
+                sdt: data.phone,
+                email: data.email,
+                birthday: data.birthday ? moment(data.birthday, 'DD/MM/YYYY') : null
+            });
+
+            setUserData(data);
+
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            notification.error({
+                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                description: 'Không thể tải thông tin người dùng!',
+                showProgress: true,
+            });
+        }
+    };
+
+    const onFinish = async (values) => {
+
+        const formData = new FormData;
+        formData.append('userId', userId)
+        formData.append('name', values.name)
+        formData.append('phone', values.sdt)
+        formData.append('birthday', values.birthday ? values.birthday.format('DD/MM/YYYY') : "")
+        formData.append('avatar', userData?.avatar || '')
+        formData.append('role', userData?.role || '')
+        formData.append('address', userData?.address || '')
+
+
+        console.log('Dữ liệu gửi đi:', formData);
+
+        try {
+            const response = await fetch('http://localhost/be-shopbangiay/api/user.php', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                body: formData,
+            });
+
+
+            if (response.success == false) {
+                notification.success({
+                    message: <span style={{ color: 'red', fontWeight: 'bold' }}>Hoàn thành</span>,
+                    description: 'Cập nhật thông tin thất bại!',
+                    showProgress: true,
+                });
+            } else {
+                const updatedData = await response.json();
+                setUserData(updatedData);
+                notification.success({
+                    message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
+                    description: 'Cập nhật thông tin thành công!',
+                    showProgress: true,
+                });
+            }
+
+        } catch (error) {
+            console.error('Đã xảy ra lỗi:', error);
+            notification.error({
+                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                description: 'Cập nhật dữ liệu thất bại!',
+                showProgress: true,
+            });
+        }
 
     };
-    const onFinishFailed = (errorInfo) => {
-        notification.error({
-            message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-            description: 'Cập nhật dữ liệu thất bại!',
-            showProgress: true,
-        });
-        console.log(errorInfo);
-    };
-
     return (
         <Form
+            form={form}
             labelAlign='left'
             labelCol={{
                 xs: { span: 24 },
@@ -38,16 +104,11 @@ function UserInfoForm() {
             }}
             style={{
                 width: '100%',
-                maxWidth: '800px', // Tăng maxWidth
+                maxWidth: '800px',
                 margin: 'auto',
                 padding: '20px 0'
             }}
-            initialValues={{
-                remember: true,
-            }}
-            
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
             <Form.Item
