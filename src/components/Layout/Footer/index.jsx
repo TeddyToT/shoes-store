@@ -1,6 +1,7 @@
 
 import { Button, Input, Layout } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMeteor, faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMeteor, faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 function Footer() {
