@@ -182,7 +182,7 @@ function PaymentInfoForm() {
                         name="note"
                         rules={[{ required: false, type: 'string', message: 'Vui lòng nhập xã/phường hợp lệ' }]}
                     >
-                        <Input size='large' placeholder='Ghi chú' />
+                        <Input size='medium' placeholder='Ghi chú' />
                     </Form.Item>
 
                     <div style={{ marginBottom: '8px', fontWeight: '500', fontSize: '20px' }}>

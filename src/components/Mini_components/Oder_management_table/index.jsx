@@ -53,10 +53,13 @@ function OdermanagementTable() {
                     return sum + (Number(item.productId.price) * Number(item.quantity));
                 }, 0);
 
+                const state = order.state === 'Done' ? 'Đã giao' :
+                    order.state === 'Pending' ? 'Đang giao' : order.state;
+
                 return {
                     key: order.invoiceId,
                     order_id: <span style={{ display: 'block', fontSize: '16px', textAlign: 'center' }}>
-                        #{order.invoiceId}
+                        {order.invoiceId}
                     </span>,
                     order_date: <span style={{ display: 'block', fontSize: '16px', textAlign: 'center' }}>
                         {order.orderDate}
@@ -70,7 +73,7 @@ function OdermanagementTable() {
                         textAlign: 'center',
                         color: getStatusColor(order.state)
                     }}>
-                        {order.state}
+                        {state}
                     </span>
                 };
             });

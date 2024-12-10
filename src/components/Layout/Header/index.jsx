@@ -40,6 +40,9 @@ function Header() {
         setQuery("");
     };
 
+    const userId = localStorage.getItem('id');
+
+
     const styles = {
         header: {
             position: 'sticky',

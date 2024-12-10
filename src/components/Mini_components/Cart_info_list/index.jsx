@@ -1,5 +1,5 @@
 
-import { Typography, Table, InputNumber, Button, Divider, Input, Row, Col } from "antd";
+import { Typography, Table, InputNumber, notification, Button, Divider, Input, Row, Col } from "antd";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,15 +12,12 @@ const CartInfoList = () => {
     const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
     useEffect(() => {
-        if (userId) { // Chỉ fetch khi có userId
+        if (userId) {
             fetchCartData();
         }
     }, [userId]);
 
     const navigate = useNavigate();
-    const handleOrderClick = () => {
-        navigate('/payment');
-    };
 
     const fetchCartData = async () => {
         try {
@@ -28,20 +25,96 @@ const CartInfoList = () => {
             const data = await response.json();
 
             const transformedData = data.map(item => ({
-                key: item.cartId,
+                cartId: item.cartId,
+                productId: item.productId.productId,
                 name: item.productId.name,
                 price: Number(item.productId.price),
                 quantity: Number(item.quantity),
                 image: item.productId.mainImage,
+                size: item.size
             }));
-
             setCartData(transformedData);
+
         } catch (error) {
             console.error('Error fetching cart data:', error);
         }
     };
-    const handleRemoveItem = () => {
 
+    const handleDecrease = (record) => {
+        setCartData(prevData =>
+            prevData.map(item =>
+                item.productId === record.productId ? { ...item, quantity: Math.max(item.quantity - 1, 1) } : item
+            )
+        );
+    };
+
+    const handleIncrease = (record) => {
+        setCartData(prevData =>
+            prevData.map(item =>
+                item.productId === record.productId ? { ...item, quantity: item.quantity + 1 } : item
+            )
+        );
+    };
+
+
+    const handleOrderClick = async () => {
+        const items = cartData.map(item => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            size: item.size
+        }));
+
+        const payload = {
+            userId: userId,
+            items: items
+        };
+
+        try {
+            const response = await fetch('http://localhost/be-shopbangiay/api/updatecart.php', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const res = await response.json();
+
+            if (res.success == true) {
+
+                navigate('/payment');
+            } else {
+                console.error('Failed to update cart:', res.statusText);
+                notification.error({
+                    message: <span style={{ color: 'red', fontWeight: 'bold' }}>Đã xảy ra lỗi</span>,
+                    description: 'Cập nhật giỏ hàng thất bại!',
+                    showProgress: true,
+                });
+            }
+        } catch (error) {
+            console.error('Error updating cart:', error);
+            notification.error({
+                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Đã xảy ra lỗi</span>,
+                description: 'Cập nhật giỏ hàng thất bại!',
+                showProgress: true,
+            });
+            console.log('Dữ liệu gửi đi:', JSON.stringify(payload));
+        }
+    };
+
+
+    const handleRemoveItem = (productId) => {
+        setCartData(prevData => {
+            const updatedData = prevData.filter(item => item.productId !== productId);
+            if (updatedData.length < prevData.length) {
+                notification.success({
+                    message: 'Thành công',
+                    description: 'Sản phẩm đã được xóa khỏi giỏ hàng.',
+                    showProgress: true,
+                });
+            }
+            return updatedData;
+        });
     };
 
 
@@ -62,7 +135,7 @@ const CartInfoList = () => {
                             marginRight: '20px',
                             flex: '0 0 auto'
                         }}
-                        onClick={() => handleRemoveItem()}
+                        onClick={() => handleRemoveItem(record.productId)}
                     />
                     <div style={{
                         display: 'flex',
@@ -85,6 +158,7 @@ const CartInfoList = () => {
                         }}>
                             <Text style={{ display: 'block' }}>{text}</Text>
                             <Text type="secondary">{record.price.toLocaleString()}đ</Text>
+                            <Text type="secondary" style={{ display: 'block' }}>Size: {record.size}</Text>
                         </div>
                     </div>
                 </div>
@@ -95,11 +169,11 @@ const CartInfoList = () => {
             title: <div style={{ fontSize: 20, fontWeight: 700, textAlign: "center" }}>Số lượng</div>,
             dataIndex: "quantity",
             key: "quantity",
-            render: (quantity) => (
+            render: (quantity, record) => (
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Button style={{ textAlign: 'center', fontSize: '20px', padding: '10px' }}>-</Button>
+                    <Button onClick={() => handleDecrease(record)} style={{ textAlign: 'center', fontSize: '20px', padding: '10px' }}>-</Button>
                     <InputNumber readOnly min={1} value={quantity} style={{ width: '40px', margin: "0 4px" }} />
-                    <Button style={{ textAlign: 'center', fontSize: '16px', padding: '10px' }}>+</Button>
+                    <Button onClick={() => handleIncrease(record)} style={{ textAlign: 'center', fontSize: '16px', padding: '10px' }}>+</Button>
                 </div>
             ),
         },
@@ -116,6 +190,7 @@ const CartInfoList = () => {
     ];
 
     const totalPrice = cartData.reduce((total, item) => total + item.price * item.quantity, 0);
+    const totalQuantity = cartData.reduce((total, item) => total + item.quantity, 0)
 
     return (
         <Row gutter={16}>
@@ -125,7 +200,7 @@ const CartInfoList = () => {
                     columns={columns}
                     dataSource={cartData}
                     pagination={false}
-                    scroll={{ y: 400 }} // Thêm thanh cuộn dọc
+                    scroll={{ y: 400 }}
                 />
                 <div style={{ textAlign: 'right', margin: '20px' }}>
                     <Text strong style={{ fontSize: 20 }}>
@@ -136,14 +211,16 @@ const CartInfoList = () => {
 
             <Col span={8}>
                 <div style={{ padding: "20px", background: "#f5f5f5", borderRadius: "8px" }}>
+                    <Text strong style={{ fontSize: 18, fontWeight: 500 }} >Tổng số lượng:</Text>
+                    <Text style={{ float: "right", fontSize: 16, fontWeight: 600 }}>{totalQuantity} sản phẩm</Text>
+                    <Divider />
                     <Text strong style={{ fontSize: 18, fontWeight: 500 }} >Tạm tính:</Text>
                     <Text style={{ float: "right", fontSize: 16, fontWeight: 600 }}>{totalPrice.toLocaleString()}đ</Text>
                     <Divider />
-                    <Text strong>Mã giảm giá:</Text>
-                    <Input placeholder="#" style={{ margin: "10px 0" }} />
+                    <Text strong><span>*Lưu ý:</span> Mức thanh toán chưa bao gồm phí vận chuyển. Phí vận chuyển có thể khác nhau tùy thuộc vào khu vực và thời gian.</Text>
+
                     <Divider />
-                    <Text style={{ fontSize: 20, fontWeight: 600 }}>TỔNG TIỀN:</Text>
-                    <Text strong style={{ fontSize: "20px", float: "right" }}>{totalPrice.toLocaleString()}đ </Text>
+
                     <Button type="primary" block
                         style={{ marginTop: "20px" }}
                         onClick={handleOrderClick}

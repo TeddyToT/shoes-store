@@ -8,7 +8,7 @@ function UserInfoForm() {
     const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
     useEffect(() => {
-        if (userId) { // Chỉ fetch khi có userId
+        if (userId) {
             fetchUserData();
         }
     }, [userId]);
@@ -27,6 +27,7 @@ function UserInfoForm() {
             });
 
             setUserData(data);
+
         } catch (error) {
             console.error('Error fetching user data:', error);
             notification.error({
@@ -38,44 +39,54 @@ function UserInfoForm() {
     };
 
     const onFinish = async (values) => {
-        // Tạo một bản sao của values để không ảnh hưởng đến form gốc
-        const formattedValues = { ...values };
 
-        // Chuyển đổi trường birthday từ Moment object sang string format dd/mm/yyyy
-        if (formattedValues.birthday) {
-            formattedValues.birthday = formattedValues.birthday.format('DD/MM/YYYY');
-        }
+        const formData = new FormData;
+        formData.append('userId', userId)
+        formData.append('name', values.name)
+        formData.append('phone', values.sdt)
+        formData.append('birthday', values.birthday ? values.birthday.format('DD/MM/YYYY') : "")
+        formData.append('avatar', userData?.avatar || '')
+        formData.append('role', userData?.role || '')
+        formData.append('address', userData?.address || '')
 
-        // Thêm userId vào dữ liệu gửi đi
-        formattedValues.userId = userId;
+
+        console.log('Dữ liệu gửi đi:', formData);
 
         try {
-            // Gửi API với dữ liệu đã được format
             const response = await fetch('http://localhost/be-shopbangiay/api/user.php', {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                 },
-                body: JSON.stringify(formattedValues),
+                body: formData,
             });
 
-            if (response.ok) {
+
+            if (response.success == false) {
+                notification.success({
+                    message: <span style={{ color: 'red', fontWeight: 'bold' }}>Hoàn thành</span>,
+                    description: 'Cập nhật thông tin thất bại!',
+                    showProgress: true,
+                });
+            } else {
+                const updatedData = await response.json();
+                setUserData(updatedData);
                 notification.success({
                     message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
                     description: 'Cập nhật thông tin thành công!',
                     showProgress: true,
                 });
-            } else {
-                throw new Error('Failed to update user info');
             }
+
         } catch (error) {
-            console.error('Error updating user data:', error);
+            console.error('Đã xảy ra lỗi:', error);
             notification.error({
                 message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
                 description: 'Cập nhật dữ liệu thất bại!',
                 showProgress: true,
             });
         }
+
     };
     return (
         <Form

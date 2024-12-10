@@ -34,11 +34,21 @@ function ContentOderTracking() {
         try {
             const response = await fetch(`http://localhost/be-shopbangiay/api/invoice.php?userId=${userId}`);
             const data = await response.json();
-            setOrders(data);
+
+            const transformedStatus = data.map((order) => {
+                order.state = order.state === 'Done' ? 'Đã giao' :
+                    order.state === 'Pending' ? 'Đang giao' : order.state;
+                return order;
+            })
+
+            setOrders(transformedStatus);
+
         } catch (error) {
             console.error('Error fetching order data:', error);
         }
+
     };
+
 
     const calculateTotal = (items) => {
         if (!items) return 0;
@@ -74,7 +84,7 @@ function ContentOderTracking() {
                 <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
                     <span>Tình trạng đơn hàng:</span>
                     <span style={{
-                        color: order.state.toLowerCase() === 'done' ? '#52c41a' : '#faad14'
+                        color: order.state === 'Đã giao' ? '#52c41a' : '#faad14'
                     }}>
                         {order.state}
                     </span>
