@@ -15,14 +15,13 @@ export const AppProvider = ({ children }) => {
     const [carts, setCarts] = useState([]);
     const [shop, setShop] = useState([]);
     const [banners, setBanners] = useState([]);
-    
-    
-    
+
+
 
     const fetchProducts = () => {
         axios.get("http://localhost/be-shopbangiay/api/product.php")
             .then((res) => {
-                
+
                 setProducts(res.data);
                 console.log(res.data);
             })
@@ -31,31 +30,33 @@ export const AppProvider = ({ children }) => {
             });
     };
 
-    
+
     const fetchCategories = () => {
         axios.get("http://localhost/be-shopbangiay/api/category.php")
             .then((res) => {
-               
+
                 setCategories(res.data);
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+
     const fetchUsers = () => {
         axios.get("http://localhost/be-shopbangiay/api/user.php")
             .then((res) => {
-                
+
                 setUsers(res.data);
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+
     const fetchManufacturers = () => {
         axios.get("http://localhost/be-shopbangiay/api/manufacturer.php")
             .then((res) => {
-                
+
                 setManufacturers(res.data);
             })
             .catch((err) => {
@@ -66,7 +67,7 @@ export const AppProvider = ({ children }) => {
     const fetchOrders = () => {
         axios.get("http://localhost/be-shopbangiay/api/invoice.php")
             .then((res) => {
-                
+
                 setOrders(res.data);
             })
             .catch((err) => {
@@ -77,27 +78,29 @@ export const AppProvider = ({ children }) => {
     const fetchCarts = () => {
         axios.get("http://localhost/be-shopbangiay/api/cart.php")
             .then((res) => {
-                
+
                 setCarts(res.data);
             })
             .catch((err) => {
                 console.log(err);
             });
     };
-    const fetchShop= () => {
+
+    const fetchShop = () => {
         axios.get("http://localhost/be-shopbangiay/api/shop.php")
             .then((res) => {
-                
+
                 setShop(res.data);
             })
             .catch((err) => {
                 console.log(err);
             });
     };
-    const fetchBanners= () => {
+
+    const fetchBanners = () => {
         axios.get("http://localhost/be-shopbangiay/api/banner.php")
             .then((res) => {
-                
+
                 setBanners(res.data);
             })
             .catch((err) => {
@@ -114,13 +117,13 @@ export const AppProvider = ({ children }) => {
         fetchCarts();
         fetchShop();
         fetchBanners();
-        
+
     }, []);
-    
+
     return (
         <DataContexts.Provider value={{
             products, setProducts, fetchProducts,
-            categories, setCategories, fetchCategories, 
+            categories, setCategories, fetchCategories,
             users, setUsers, fetchUsers,
             orders, setOrders, fetchOrders,
             manufacturers, setManufacturers, fetchManufacturers,

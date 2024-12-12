@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, Input, Card, Typography, Row, Col, notification, Divider } from 'antd';
 import { DollarOutlined, CreditCardOutlined } from '@ant-design/icons';
+import momo from '../../../assets/images/momo.png'
+import ship from '../../../assets/images/ship.png'
+
 
 function PaymentInfoForm() {
 
@@ -17,12 +20,12 @@ function PaymentInfoForm() {
         }
     }, [userId]);
 
+
     const fetchUserData = async () => {
         try {
             const response = await fetch(`http://localhost/be-shopbangiay/api/user.php?userId=${userId}`);
             const data = await response.json();
 
-            // Cập nhật form với thông tin người dùng
             form.setFieldsValue({
                 name: data.name,
                 email: data.email,
@@ -46,7 +49,6 @@ function PaymentInfoForm() {
             const response = await fetch(`http://localhost/be-shopbangiay/api/cart.php?userId=${userId}`);
             const data = await response.json();
 
-            // Transform cart data to order details format
             const transformedData = data.map(item => ({
                 productId: item.productId.productId,
                 name: item.productId.name,
@@ -59,11 +61,6 @@ function PaymentInfoForm() {
             setOrderDetails(transformedData);
         } catch (error) {
             console.error('Error fetching cart data:', error);
-            notification.error({
-                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                description: 'Không thể tải thông tin giỏ hàng!',
-                showProgress: true,
-            });
         }
     };
 
@@ -72,61 +69,103 @@ function PaymentInfoForm() {
     const totalAmount = productAmount + shippingFee;
 
     const onFinish = async (values) => {
+        const orderData = {
+            userId: userId,
+            items: orderDetails.map(item => ({
+                productId: item.productId,
+                quantity: item.quantity,
+                size: item.size
+            })),
+            address: values.address,
+            note: values.note || '',
+            paymentMethod: values.paymentmethod,
+            name: values.name,
+            phone: values.sdt
+        };
+        if (orderData.paymentMethod == 'cash') {
+            try {
+                const response = await fetch('http://localhost/be-shopbangiay/api/invoice.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData)
+                });
 
-        try {
-            // Chuẩn bị dữ liệu gửi đi
-            const orderData = {
-                userId: userId,
-                items: orderDetails.map(item => ({
-                    productId: item.productId,
-                    quantity: item.quantity,
-                    size: item.size
-                })),
-                address: values.address,
-                note: values.note || '',
-                paymentMethod: values.paymentmethod
-            };
+                const res = await response.json();
 
-            // Gọi API đặt hàng
-            const response = await fetch('http://localhost/be-shopbangiay/api/order.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(orderData)
-            });
-
-            if (response.ok) {
-                notification.success({
-                    message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
-                    description: 'Đặt hàng thành công!',
+                if (res.success == true) {
+                    notification.success({
+                        message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
+                        description: 'Đặt hàng thành công!',
+                        showProgress: true,
+                    });
+                } else {
+                    console.error('Failed to place order');
+                    notification.error({
+                        message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                        description: 'Vui lòng kiểm tra lại thông tin!',
+                        showProgress: true,
+                    });
+                }
+            } catch (error) {
+                console.error('Error placing order:', error);
+                notification.error({
+                    message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                    description: 'Đặt hàng thất bại!',
                     showProgress: true,
                 });
-            } else {
-                throw new Error('Failed to place order');
+                console.log('Dữ liệu gửi đi:', JSON.stringify(orderData));
             }
-        } catch (error) {
-            console.error('Error placing order:', error);
-            notification.error({
-                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                description: 'Đặt hàng thất bại!',
-                showProgress: true,
-            });
+        } else {
+            try {
+                const response = await fetch('http://localhost/be-shopbangiay/api/invoice.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                const res = await response.json();
+
+                if (res.success == true) {
+                    notification.success({
+                        message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
+                        description: 'Đặt hàng thành công!',
+                        showProgress: true,
+                    });
+
+                } else {
+                    console.error('Failed to place order');
+                    notification.error({
+                        message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                        description: 'Vui lòng kiểm tra lại thông tin!',
+                        showProgress: true,
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error placing order:', error);
+                notification.error({
+                    message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
+                    description: 'Đặt hàng thất bại!',
+                    showProgress: true,
+                });
+                console.log('Dữ liệu gửi đi:', JSON.stringify(orderData));
+            }
         }
+
     };
 
-    const onFinishFailed = (errorInfo) => {
-        notification.error({
-            message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-            description: 'Vui lòng kiểm tra lại thông tin!',
-            showProgress: true,
-        });
-        console.log(errorInfo);
-    };
-
-    const handleCardClick = (paymentMethod) => {
-        setSelectedPayment(paymentMethod);
-        form.setFieldsValue({ paymentmethod: paymentMethod });
+    const handlePayment = () => {
+        form.validateFields().then(values => {
+            onFinish(values);
+        })
+    }
+    const handleCardClick = (method) => {
+        setSelectedPayment(method);
+        form.setFieldsValue({ paymentmethod: method });
     };
 
     return (
@@ -141,8 +180,6 @@ function PaymentInfoForm() {
                     wrapperCol={{ span: 14 }}
                     style={{ maxWidth: 600, margin: 'auto' }}
                     initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
                     autoComplete="off"
                 >
                     <Form.Item
@@ -197,33 +234,34 @@ function PaymentInfoForm() {
                             <Col span={12}>
                                 <Card
                                     hoverable
-                                    onClick={() => handleCardClick('cash')}
+                                    onClick={() => handleCardClick('Cod')}
                                     style={{
                                         textAlign: 'center',
                                         borderRadius: '8px',
-                                        padding: '14px 0',
-                                        border: selectedPayment === 'cash' ? '1px solid #1b96dd' : '1px solid #d9d9d9',
-                                        boxShadow: selectedPayment === 'cash' ? '0 4px 8px rgba(0, 0, 0, 0.2)' : 'none',
+                                        padding: '5px 0',
+                                        border: selectedPayment === 'Cod' ? '1px solid #1b96dd' : '1px solid #d9d9d9',
+                                        boxShadow: selectedPayment === 'Cod' ? '0 4px 8px rgba(0, 0, 0, 0.2)' : 'none',
                                     }}
                                 >
-                                    <DollarOutlined style={{ fontSize: '24px', color: '#fadb14' }} />
-                                    <span style={{ display: 'block', marginTop: '8px' }}>Thanh toán khi nhận hàng</span>
+                                    <span style={{ display: 'block', }}>Thanh toán khi nhận hàng</span>
+                                    <img src={ship} style={{ width: '100px', margin: 'auto' }} />
+
                                 </Card>
                             </Col>
                             <Col span={12}>
                                 <Card
                                     hoverable
-                                    onClick={() => handleCardClick('bank')}
+                                    onClick={() => handleCardClick('Momo')}
                                     style={{
                                         textAlign: 'center',
                                         borderRadius: '8px',
-                                        padding: '14px 0',
-                                        border: selectedPayment === 'bank' ? '1px solid #1b96dd' : '1px solid #d9d9d9',
-                                        boxShadow: selectedPayment === 'bank' ? '0 4px 8px rgba(0, 0, 0, 0.2)' : 'none',
+                                        padding: '5px 0',
+                                        border: selectedPayment === 'Momo' ? '1px solid #1b96dd' : '1px solid #d9d9d9',
+                                        boxShadow: selectedPayment === 'Momo' ? '0 4px 8px rgba(0, 0, 0, 0.2)' : 'none',
                                     }}
                                 >
-                                    <CreditCardOutlined style={{ fontSize: '24px', color: '#40a9ff' }} />
-                                    <span style={{ display: 'block', marginTop: '8px' }}>Chuyển khoản ngân hàng</span>
+                                    <span style={{ display: 'block', }}>Thanh toán bằng MOMO</span>
+                                    <img src={momo} style={{ width: '100px', margin: 'auto' }} />
                                 </Card>
                             </Col>
                         </Row>
@@ -279,8 +317,8 @@ function PaymentInfoForm() {
                         type="primary"
                         block
                         style={{ marginTop: '20px' }}
-                        onClick={() => form.submit()}
                         disabled={!selectedPayment}
+                        onClick={handlePayment}
                     >
                         Thanh toán
                     </Button>

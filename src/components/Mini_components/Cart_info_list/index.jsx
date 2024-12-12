@@ -81,7 +81,6 @@ const CartInfoList = () => {
             const res = await response.json();
 
             if (res.success == true) {
-
                 navigate('/payment');
             } else {
                 console.error('Failed to update cart:', res.statusText);
