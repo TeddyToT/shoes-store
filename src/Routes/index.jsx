@@ -14,6 +14,7 @@ import Introduce from "../pages/About/About"
 import Contact from "../pages/Contact/Contact"
 import ForgotPassowrd from "../pages/ForgortPassword/ForgotPassword"
 import ConfirmNewPassword from "../pages/ForgortPassword/ConfirmNewPassword"
+
 const publicRoutes = [
     { path: '/', conponent: Home },
     { path: '/order-detail', conponent: OrderDetail },
@@ -22,8 +23,6 @@ const publicRoutes = [
     { path: '/account', conponent: Account },
     { path: '/payment', conponent: Payment },
     { path: '/ordertracking', conponent: OrderTracking },
-
-
     {path:"/san-pham/:slugId", conponent: ItemDetails},
     {path:"/san-pham", conponent: AllProducts},
     {path:"/dang-nhap", conponent: Login},

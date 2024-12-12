@@ -1,12 +1,13 @@
 
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback  } from "react";
 import axios from "axios";
-import { CgKey } from "react-icons/cg";
+
 
 export const DataContexts = createContext({})
 
 export const AppProvider = ({ children }) => {
     // const[email, setEmail] = useState("")
+
     const [users, setUsers] = useState([]);
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -15,8 +16,25 @@ export const AppProvider = ({ children }) => {
     const [carts, setCarts] = useState([]);
     const [shop, setShop] = useState([]);
     const [banners, setBanners] = useState([]);
+    const [userCart, setUserCart] = useState([]);
+
+    const id = localStorage.getItem("id")
     
+    const fetchCartUser = (id) => {
+        if (!id) {
+            console.log("Không có user");
+            return;
+        }
     
+        axios.get(`http://localhost/be-shopbangiay/api/cart.php?userId=` + id)
+            .then((res) => {
+                setUserCart(res.data);
+                console.log(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
     
 
     const fetchProducts = () => {
@@ -115,7 +133,19 @@ export const AppProvider = ({ children }) => {
         fetchShop();
         fetchBanners();
         
+       
+        
     }, []);
+    useEffect(() => {
+        if (!id) {
+            console.log("User is not logged in. Redirecting to login.");
+            // Chuyển hướng hoặc xử lý khác
+            return;
+        }
+    
+        fetchCartUser(id);
+    }, [id]);
+    
     
     return (
         <DataContexts.Provider value={{
@@ -126,7 +156,9 @@ export const AppProvider = ({ children }) => {
             manufacturers, setManufacturers, fetchManufacturers,
             carts, setCarts, fetchCarts,
             shop, setShop, fetchShop,
-            banners, setBanners, fetchBanners
+            banners, setBanners, fetchBanners,
+            userCart, fetchCartUser
+           
         }}>
             {children}
         </DataContexts.Provider>

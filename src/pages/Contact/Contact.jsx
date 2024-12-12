@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb'
-import logo from "../../assets/images/logo.png";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import WebCard from "./WebCard";
 import axios from "axios";
 
 const Contact = () => {
+
+    const userId = localStorage.getItem('id');
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
@@ -57,12 +58,13 @@ const Contact = () => {
             return
         }
 
-        axios.post('', {
+        axios.post('http://localhost/be-shopbangiay/api/feedback.php', {
+            userId: userId,
             name: name,
             email: email,
             phone: phone,
             address: address,
-            text: text
+            content: text
         })
         .then(() => {
             toast.success("Gửi phản hồi thành công", {
@@ -143,7 +145,6 @@ const Contact = () => {
                                     <div className="bg-[#1677ff] absolute w-0 h-full rounded-lg group-hover:w-full duration-200"></div>
                                     <p className="text-lg w-full text-white font-bold z-10">
                                         Gửi đi
-                                        <i class="fa-solid fa-paper-plane ml-3"></i>
                                     </p>
                                 </button>
                             </div>

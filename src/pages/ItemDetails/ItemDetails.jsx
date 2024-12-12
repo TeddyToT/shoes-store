@@ -1,17 +1,18 @@
 import { useState, useEffect, useContext } from "react";
 import QuantitySelection from "../../components/QuantitySelection";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import RecommentItem from "../../components/RecommentItem/RecommentItem";
 import axios from "axios";
 import { DataContexts } from "../../AppContexts/Contexts";
 import SizeSelect from "./SizeSelect";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
+import { toast } from "react-toastify";
 const ItemDetails = () => {
   const { slugId } = useParams();
-  const {products} = useContext(DataContexts)
+  const {products, fetchCartUser} = useContext(DataContexts)
   const lastDashIndex = slugId.lastIndexOf("-");
   const productId = slugId.slice(lastDashIndex + 1);
-
+  const userId = localStorage.getItem('id');
 const [items, setItems] = useState([])
 
   const [quantity, setQuantity] = useState(1);
@@ -25,6 +26,8 @@ const [items, setItems] = useState([])
   const [discount, setDiscount] = useState(0);
   const [price, setPrice] = useState(0);
   const [selectedSize, setSelectedSize] = useState({});
+
+  const navigate = useNavigate()
   useEffect(() => {
     axios
       .get(
@@ -45,6 +48,68 @@ const [items, setItems] = useState([])
         console.log(err);
       });
   }, [productId]);
+
+  const handleAddCartClick = () => {
+
+    axios.post("http://localhost/be-shopbangiay/api/cart.php", {
+      userId: userId.toString(),
+      productId: productId.toString(),
+      quantity: Number(quantity),
+      size: selectedSize.size.toString(),
+    })
+        .then((res) => {
+            if (res.data.success == false) {
+              toast.error('Thêm vào giỏ hàng thất bại', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+                });
+              
+            }
+            else {
+              fetchCartUser(userId)
+              toast.success('Thêm vào giỏ hàng thành công', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "light",
+                });
+                
+            }
+        }
+        )
+        .catch(err => {
+            console.log(err)
+        })
+    
+
+}
+
+const handleOrderClick = async () => {
+  const items = [{
+    productId: productId.toString(),
+    quantity: Number(quantity),
+    size: selectedSize.size.toString(),
+  }]
+
+  const payload = {
+      userId: userId,
+      items: items
+  };
+  navigate('/mua-ngay', { state: payload });
+
+};
+
+
   useEffect(() => {
     if (sizes.length > 0) {
       setSelectedSize(sizes[0]);
@@ -169,7 +234,7 @@ const [items, setItems] = useState([])
                   {discount!=0?(
                     <div className="w-full flex flex-row items-end gap-3">
                                         <p className="font-bold text-4xl">
-                    {formatNumber(price - (price * discount) / 100)}
+                    {formatNumber(price - (price * discount) / 100)}đ
                   </p>
 
                   <p className="text-4xl font-medium text-gray-500 line-through">
@@ -179,7 +244,7 @@ const [items, setItems] = useState([])
                   ):(
 <div className="w-full flex flex-row items-end gap-3">
                   <p className="font-bold text-4xl">
-                    {formatNumber(price)}
+                    {formatNumber(price)}đ
                   </p>
 
                       </div>
@@ -218,14 +283,14 @@ const [items, setItems] = useState([])
               <div className="flex flex-row mt-5 gap-3">
                 <button className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none ">
                   <p
-                    onClick=""
+                    onClick={handleOrderClick}
                     className="text-lg w-full text-black group-hover:text-white font-bold "
                   >
                     Mua ngay
                   </p>
                 </button>
                 <button
-                  onClick=""
+                  onClick={handleAddCartClick}
                   className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start  border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none "
                 >
                   <p className="text-lg w-full text-black group-hover:text-white font-bold">
