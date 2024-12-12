@@ -3,6 +3,7 @@ import { Layout, Input } from 'antd';
 import Navbar from '../../Mini_components/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
     faUser,
     faBagShopping,
@@ -10,11 +11,11 @@ import {
     faBars,
     faXmark
 } from '@fortawesome/free-solid-svg-icons';
-import { useState, useEffect } from 'react';
-
+import { useState, useEffect, useContext } from 'react';
+import { DataContexts } from '../../../AppContexts/Contexts';
 function Header() {
     const userID = localStorage.getItem("id")
-
+    const {userCart, fetchCartUser} = useContext(DataContexts)
     const { Header } = Layout;
     const { Search } = Input;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,6 +23,7 @@ function Header() {
 
     const [query, setQuery] = useState("")
     useEffect(() => {
+        
         const handleResize = () => setWindowWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
@@ -40,8 +42,18 @@ function Header() {
         setQuery("");
     };
 
-    const userId = localStorage.getItem('id');
+    
 
+    useEffect(() => {
+        if (userID) {
+            // fetchCartUser(userID);
+        }
+        return
+    }, [userID, fetchCartUser]);
+    
+
+
+    
 
     const styles = {
         header: {
@@ -218,7 +230,7 @@ function Header() {
                         <FontAwesomeIcon icon={faBagShopping} style={styles.icon} />
                         <div style={styles.textContainer}>
                             <h5 style={styles.heading}>Giỏ hàng</h5>
-                            <a href="/cart" style={styles.link}>Số sản phẩm</a>
+                            <a href="/cart" style={styles.link}>Số sản phẩm: {userCart.length}</a>
                         </div>
                     </div>
                 </div>

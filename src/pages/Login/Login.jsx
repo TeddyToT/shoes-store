@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
@@ -6,9 +6,10 @@ import { CiUser, CiLock } from "react-icons/ci";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Layout } from "antd";
 import { toast } from "react-toastify";
-
+// import { DataContexts } from "../../AppContexts/Contexts";
 import axios from "axios";
 const Login = () => {
+  // const {setUserId} = useContext(DataContexts)
   const navigate = useNavigate();
   const [userName, setUsername] = useState("")
   const [password, setPassword] = useState("");
@@ -64,22 +65,37 @@ const Login = () => {
             theme: "light",
           });
         } else {
-
-          toast.success('Đăng nhập thành công', {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "light",
-            onClose: () => {
+          if (res.data.role != "Customer")
+          {
+            toast.warn('Nhân viên và Admin không đăng nhập web bán hàng', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: undefined,
+              theme: "light",
+              });
+          }
+          else{
+            toast.success('Đăng nhập thành công', {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              theme: "light",
+              });
               localStorage.setItem('id', res.data.userId)
-              navigate("/");
-            }
-          });
-
+              // setUserId(res.data.userId); 
+                navigate("/");
+                
+          }
+          
+          
         }
       })
       .catch((err) => console(err));
@@ -96,10 +112,6 @@ const Login = () => {
                 <img className="" src={logo} alt="Logo" />
               </Link>
 
-              <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
-              </p>
 
             </div>
           </div>
