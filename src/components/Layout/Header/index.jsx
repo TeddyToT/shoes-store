@@ -46,8 +46,9 @@ function Header() {
 
     useEffect(() => {
         if (userID) {
-            fetchCartUser(userID);
+            // fetchCartUser(userID);
         }
+        return
     }, [userID, fetchCartUser]);
     
 

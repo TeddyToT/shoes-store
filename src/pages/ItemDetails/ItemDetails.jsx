@@ -72,7 +72,7 @@ const [items, setItems] = useState([])
               
             }
             else {
-              fetchCartUser(userId)
+              
               toast.success('Thêm vào giỏ hàng thành công', {
                 position: "top-right",
                 autoClose: 2000,
@@ -83,6 +83,7 @@ const [items, setItems] = useState([])
                 progress: undefined,
                 theme: "light",
                 });
+                fetchCartUser(userId)
                 
             }
         }
