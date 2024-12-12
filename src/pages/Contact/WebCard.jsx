@@ -1,14 +1,16 @@
 import logo from "../../assets/images/logo.png";
-import React from "react";
+import React, {useContext} from "react";
 import { MdPlace, MdLocalPhone  } from "react-icons/md";
 import { IoMdMail } from "react-icons/io";
-import Layout from "antd/es/layout/layout";
+
+import { DataContexts } from "../../AppContexts/Contexts";
 const WebCard = () => {
+    const {shop} = useContext(DataContexts)
     return (
         <>
             <div className="w-full h-full flex flex-col items-center gap-5 border rounded-xl p-5">
                 <img
-                    src={logo}
+                    src={shop.logodark}
                     className="w-1/2 "
                 />
                 <div className="border-b border-[#bbbbbb] w-3/4"></div>

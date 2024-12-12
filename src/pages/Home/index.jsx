@@ -20,11 +20,11 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div className="py-5 px-8">
       <Breadcrumb />
 
       <div className=" w-full mt-5 mb-10 rounded-sm border border-stroke shadow-default place-self-center ">
-        <div className="w-full bg-red-500 flex place-self-center place-items-center place-content-center justify-items-center items-center">
+        <div className="w-full flex place-self-center place-items-center place-content-center justify-items-center items-center">
           <Swiper
             loop={true}
             autoplay={{

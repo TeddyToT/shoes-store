@@ -194,6 +194,9 @@ function UserInfoForm() {
                         padding: '8px 16px',
                         width: '100%'
                     }}
+                    value={test}
+                    onChange={(e)=>setTest(e.target.value)}
+                    
                 />
             </Form.Item>
 
