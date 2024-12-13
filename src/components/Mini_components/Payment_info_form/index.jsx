@@ -9,6 +9,7 @@ import axios from 'axios';
 
 function PaymentInfoForm() {
 
+    const navigate = useNavigate();
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [form] = Form.useForm();
     const [userData, setUserData] = useState(null);
@@ -21,14 +22,14 @@ function PaymentInfoForm() {
     useEffect(() => {
         if (userId) {
             fetchUserData();
-            if (item){
+            if (item) {
                 buyNowData();
                 console.log("Item tu detaik", orderDetails);
             }
-            else{
+            else {
                 fetchCartData();
             }
-            
+
         }
     }, [userId, item]);
 
@@ -77,7 +78,7 @@ function PaymentInfoForm() {
     };
     const buyNowData = () => {
 
-            setOrderDetails(item);
+        setOrderDetails(item);
 
     };
 
@@ -102,11 +103,11 @@ function PaymentInfoForm() {
             name: values.name,
             phone: values.sdt,
             amount: productAmount
-            
+
         };
         console.log("Dữ liệu gửi đi: ", orderData);
         if (orderData.paymentMethod == 'cash') {
-            
+
             try {
                 const response = await fetch('http://localhost/be-shopbangiay/api/invoice.php', {
                     method: 'POST',
@@ -141,19 +142,18 @@ function PaymentInfoForm() {
                 });
                 console.log('Dữ liệu gửi đi:', JSON.stringify(orderData));
             }
-        } else 
-        {
- 
-        axios.post('http://localhost/be-shopbangiay/api/payment.php', {
-            
-            userId: orderData.userId,
-            name: orderData.name,
-            phone: orderData.phone,
-            address: orderData.phone,
-            note: orderData.note,
-            amount: orderData.amount,
-            items: orderData.items
-                })
+        } else {
+
+            axios.post('http://localhost/be-shopbangiay/api/payment.php', {
+
+                userId: orderData.userId,
+                name: orderData.name,
+                phone: orderData.phone,
+                address: orderData.phone,
+                note: orderData.note,
+                amount: orderData.amount,
+                items: orderData.items
+            })
 
                 .then((res) => {
                     window.location.href = res.data.payUrl;
@@ -173,7 +173,7 @@ function PaymentInfoForm() {
             const params = new URLSearchParams(window.location.search);
             const extraData = params.get("extraData");
             let data;
-    
+
             try {
                 data = extraData ? JSON.parse(decodeURIComponent(extraData)) : undefined;
             } catch (error) {
@@ -181,11 +181,11 @@ function PaymentInfoForm() {
                 toast.error("Dữ liệu thanh toán không hợp lệ");
                 return;
             }
-    
+
             if (params.get("orderId")) {
                 const cleanUrl = window.location.origin + window.location.pathname;
                 window.history.replaceState(null, "", cleanUrl);
-    
+
                 if (params.get("resultCode") === "0") {
                     try {
                         const res = await axios.post(`http://localhost/be-shopbangiay/api/invoice.php`, {
@@ -197,16 +197,16 @@ function PaymentInfoForm() {
                             name: data.name,
                             phone: data.phone,
                         });
-    
+
                         if (!res.data || !res.data.success) {
                             toast.error(res.data?.message || "Lỗi hệ thống, thử lại sau");
                             return;
                         }
-    
+
                         toast.success("Tạo đơn hàng thành công");
                     } catch (error) {
                         console.error("API Error:", error);
-                        toast.error("Không thể tạo đơn hàng. Vui lòng thử lại.", );
+                        toast.error("Không thể tạo đơn hàng. Vui lòng thử lại.",);
                     }
                 } else {
                     toast.error("Thanh toán thất bại");
@@ -215,9 +215,9 @@ function PaymentInfoForm() {
         };
         verifyPayment();
     }, []);
-    
 
-    
+
+
     const handlePayment = () => {
         form.validateFields().then(values => {
             onFinish(values);

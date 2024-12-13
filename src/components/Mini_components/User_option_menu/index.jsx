@@ -35,7 +35,7 @@ function UserOptionMenu() {
                 navigate('/order-management'); // Chuyển đến trang lịch sử đơn hàng
                 break;
             case '4':
-                navigate('/logout'); // Chuyển đến trang đăng xuất
+                navigate('/dang-nhap'); // Chuyển đến trang đăng xuất
                 break;
             default:
                 break;
