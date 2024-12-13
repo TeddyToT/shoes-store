@@ -96,17 +96,16 @@ const [items, setItems] = useState([])
 }
 
 const handleOrderClick = async () => {
-  const items = [{
-    productId: productId.toString(),
+  const payload = [{
+    productId: productId,
+    name: productName,
+    price: Number(price),
     quantity: Number(quantity),
     size: selectedSize.size.toString(),
+    image: images[0]
   }]
 
-  const payload = {
-      userId: userId,
-      items: items
-  };
-  navigate('/mua-ngay', { state: payload });
+  navigate('/payment', { state: payload });
 
 };
 

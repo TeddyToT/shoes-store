@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, Input, Card, Typography, Row, Col, notification, Divider } from 'antd';
 import { DollarOutlined, CreditCardOutlined } from '@ant-design/icons';
+import { useLocation } from 'react-router-dom';
 import momo from '../../../assets/images/momo.png'
 import ship from '../../../assets/images/ship.png'
-
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 function PaymentInfoForm() {
 
@@ -13,12 +15,22 @@ function PaymentInfoForm() {
     const [orderDetails, setOrderDetails] = useState([]);
     const userId = localStorage.getItem('id');
 
+    const location = useLocation();
+    const item = location.state;
+
     useEffect(() => {
         if (userId) {
             fetchUserData();
-            fetchCartData();
+            if (item){
+                buyNowData();
+                console.log("Item tu detaik", orderDetails);
+            }
+            else{
+                fetchCartData();
+            }
+            
         }
-    }, [userId]);
+    }, [userId, item]);
 
 
     const fetchUserData = async () => {
@@ -63,10 +75,18 @@ function PaymentInfoForm() {
             console.error('Error fetching cart data:', error);
         }
     };
+    const buyNowData = () => {
+
+            setOrderDetails(item);
+
+    };
 
     const shippingFee = 30000;
     const productAmount = orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const totalAmount = productAmount + shippingFee;
+
+
+
 
     const onFinish = async (values) => {
         const orderData = {
@@ -80,9 +100,13 @@ function PaymentInfoForm() {
             note: values.note || '',
             paymentMethod: values.paymentmethod,
             name: values.name,
-            phone: values.sdt
+            phone: values.sdt,
+            amount: productAmount
+            
         };
+        console.log("Dữ liệu gửi đi: ", orderData);
         if (orderData.paymentMethod == 'cash') {
+            
             try {
                 const response = await fetch('http://localhost/be-shopbangiay/api/invoice.php', {
                     method: 'POST',
@@ -117,47 +141,83 @@ function PaymentInfoForm() {
                 });
                 console.log('Dữ liệu gửi đi:', JSON.stringify(orderData));
             }
-        } else {
-            try {
-                const response = await fetch('http://localhost/be-shopbangiay/api/invoice.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(orderData)
-                });
+        } else 
+        {
+ 
+        axios.post('http://localhost/be-shopbangiay/api/payment.php', {
+            
+            userId: orderData.userId,
+            name: orderData.name,
+            phone: orderData.phone,
+            address: orderData.phone,
+            note: orderData.note,
+            amount: orderData.amount,
+            items: orderData.items
+                })
 
-                const res = await response.json();
-
-                if (res.success == true) {
-                    notification.success({
-                        message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
-                        description: 'Đặt hàng thành công!',
-                        showProgress: true,
-                    });
-
-                } else {
-                    console.error('Failed to place order');
-                    notification.error({
-                        message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                        description: 'Vui lòng kiểm tra lại thông tin!',
-                        showProgress: true,
-                    });
-                }
-
-            } catch (error) {
-                console.error('Error placing order:', error);
-                notification.error({
-                    message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                    description: 'Đặt hàng thất bại!',
-                    showProgress: true,
-                });
-                console.log('Dữ liệu gửi đi:', JSON.stringify(orderData));
-            }
+                .then((res) => {
+                    window.location.href = res.data.payUrl;
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
         }
 
     };
 
+
+
+
+    useEffect(() => {
+        const verifyPayment = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const extraData = params.get("extraData");
+            let data;
+    
+            try {
+                data = extraData ? JSON.parse(decodeURIComponent(extraData)) : undefined;
+            } catch (error) {
+                console.error("Invalid extraData:", error);
+                toast.error("Dữ liệu thanh toán không hợp lệ");
+                return;
+            }
+    
+            if (params.get("orderId")) {
+                const cleanUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState(null, "", cleanUrl);
+    
+                if (params.get("resultCode") === "0") {
+                    try {
+                        const res = await axios.post(`http://localhost/be-shopbangiay/api/invoice.php`, {
+                            userId: data.userId,
+                            items: data.items,
+                            paymentMethod: "Momo",
+                            address: data.address,
+                            note: data.note,
+                            name: data.name,
+                            phone: data.phone,
+                        });
+    
+                        if (!res.data || !res.data.success) {
+                            toast.error(res.data?.message || "Lỗi hệ thống, thử lại sau");
+                            return;
+                        }
+    
+                        toast.success("Tạo đơn hàng thành công");
+                    } catch (error) {
+                        console.error("API Error:", error);
+                        toast.error("Không thể tạo đơn hàng. Vui lòng thử lại.", );
+                    }
+                } else {
+                    toast.error("Thanh toán thất bại");
+                }
+            }
+        };
+        verifyPayment();
+    }, []);
+    
+
+    
     const handlePayment = () => {
         form.validateFields().then(values => {
             onFinish(values);
@@ -166,6 +226,7 @@ function PaymentInfoForm() {
     const handleCardClick = (method) => {
         setSelectedPayment(method);
         form.setFieldsValue({ paymentmethod: method });
+        console.log("Item tu detaik", orderDetails);
     };
 
     return (
