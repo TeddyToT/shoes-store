@@ -81,7 +81,6 @@ const CartInfoList = () => {
             const res = await response.json();
 
             if (res.success == true) {
-
                 navigate('/payment');
             } else {
                 console.error('Failed to update cart:', res.statusText);
@@ -103,18 +102,52 @@ const CartInfoList = () => {
     };
 
 
-    const handleRemoveItem = (productId) => {
-        setCartData(prevData => {
-            const updatedData = prevData.filter(item => item.productId !== productId);
-            if (updatedData.length < prevData.length) {
-                notification.success({
-                    message: 'Thành công',
-                    description: 'Sản phẩm đã được xóa khỏi giỏ hàng.',
+    const handleRemoveItem = async (productId) => {
+        const itemToRemove = cartData.find(item => item.productId === productId);
+        if (!itemToRemove) return;
+
+        const payload = {
+            userId: userId,
+            productId: itemToRemove.productId,
+            size: itemToRemove.size,
+        };
+
+        try {
+            const response = await fetch('http://localhost/be-shopbangiay/api/cart.php', {
+                method: 'PUT', // Sử dụng phương thức DELETE
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const res = await response.json();
+
+            if (res.success) {
+                setCartData(prevData => {
+                    const updatedData = prevData.filter(item => item.productId !== productId);
+                    notification.success({
+                        message: 'Thành công',
+                        description: 'Sản phẩm đã được xóa khỏi giỏ hàng.',
+                        showProgress: true,
+                    });
+                    return updatedData;
+                });
+            } else {
+                notification.error({
+                    message: 'Lỗi',
+                    description: 'Không thể xóa sản phẩm.',
                     showProgress: true,
                 });
             }
-            return updatedData;
-        });
+        } catch (error) {
+            console.error('Error removing item:', error);
+            notification.error({
+                message: 'Lỗi',
+                description: 'Không thể xóa sản phẩm.',
+                showProgress: true,
+            });
+        }
     };
 
 
@@ -224,6 +257,7 @@ const CartInfoList = () => {
                     <Button type="primary" block
                         style={{ marginTop: "20px" }}
                         onClick={handleOrderClick}
+                        disabled={!totalPrice}
                     >
                         Đặt hàng
                     </Button>
