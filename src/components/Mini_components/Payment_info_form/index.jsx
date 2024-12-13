@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Button, Form, Input, Card, Typography, Row, Col, notification, Divider } from 'antd';
-import { DollarOutlined, CreditCardOutlined } from '@ant-design/icons';
 import momo from '../../../assets/images/momo.png'
 import ship from '../../../assets/images/ship.png'
+import { useNavigate } from 'react-router-dom';
 
 
 function PaymentInfoForm() {
 
+    const navigate = useNavigate();
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [form] = Form.useForm();
     const [userData, setUserData] = useState(null);
@@ -135,7 +136,6 @@ function PaymentInfoForm() {
                         description: 'Đặt hàng thành công!',
                         showProgress: true,
                     });
-
                 } else {
                     console.error('Failed to place order');
                     notification.error({
@@ -155,6 +155,32 @@ function PaymentInfoForm() {
                 console.log('Dữ liệu gửi đi:', JSON.stringify(orderData));
             }
         }
+
+        const user = {
+            userId: userId
+        }
+        try {
+            const response = await fetch('http://localhost/be-shopbangiay/api/cart.php', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user)
+            });
+
+            const res = await response.json();
+            if (res.success == true) {
+                console.log('Giỏ hàng đã được xóa thành công');
+            } else {
+                console.error('Không thể xóa giỏ hàng:', res.message);
+            }
+
+        } catch (error) {
+            console.error('Lỗi xóa cart sau thanh toán', error)
+        }
+        console.log('userData', user)
+
+        navigate('/cart')
 
     };
 
