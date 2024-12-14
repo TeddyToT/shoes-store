@@ -13,7 +13,7 @@ const AllProducts = () => {
   const { products, categories, manufacturers } = useContext(DataContexts);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
   const [query, setQuery] = useState(searchParams.get("query") || "");
@@ -26,81 +26,79 @@ const AllProducts = () => {
   const [searchProduct, setSearchProduct] = useState([]);
 
 
-useEffect(() => {
-  const params = {};
-  if (query) params.query = query;
+  useEffect(() => {
+    const params = {};
+    if (query) params.query = query;
 
- 
-  if (categoriesOptions.length > 0) {
-    const categoryIds = categoriesOptions
-      .map(category => category.categoryId) 
-      .filter(id => id);                   
 
-    if (categoryIds.length > 0) {
-      params.categories = categoryIds.join(",");
+    if (categoriesOptions.length > 0) {
+      const categoryIds = categoriesOptions
+        .map(category => category.categoryId)
+        .filter(id => id);
+
+      if (categoryIds.length > 0) {
+        params.categories = categoryIds.join(",");
+      }
     }
-  }
 
-  if (brandOption) params.brand = brandOption.name;
+    if (brandOption) params.brand = brandOption.name;
 
-  setSearchParams(params);
-}, [query, categoriesOptions, brandOption]);
-
+    setSearchParams(params);
+  }, [query, categoriesOptions, brandOption]);
 
 
-  
   useEffect(() => {
     const query = searchParams.get("query");
     const categoriesFromURL = searchParams.get("categories");
     const brandFromURL = searchParams.get("brand");
-  
+
     console.log('Categories from URL:', categoriesFromURL);
     console.log('Brand from URL:', brandFromURL);
-  
+
     if (query) {
       setQuery(query);
     }
-  
+
     if (categoriesFromURL) {
       const decodedCategories = decodeURIComponent(categoriesFromURL).split(",");
       const selectedCategories = decodedCategories.map(categoryId =>
         categories.find(category => category.categoryId === categoryId)
       ).filter(category => category);
-  
+
       setCategoriesOptions(selectedCategories);
     }
-  
+
     if (brandFromURL) {
       const selectedBrand = manufacturers.find(manufacturer => manufacturer.name === brandFromURL);
       setBrandOption(selectedBrand);
     }
   }, [searchParams, categories, manufacturers]);
 
-  
+
   useEffect(() => {
     let filtered = products;
-  
+
     if (query) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(query.toLowerCase())
       );
     }
-  
+
     if (categoriesOptions.length > 0) {
       const categoryIds = categoriesOptions.map(category => category.categoryId);
-  
+
       filtered = filtered.filter(product =>
         categoryIds.includes(product.categoryId.categoryId)
       );
     }
-  
+
     if (brandOption) {
       filtered = filtered.filter(product => product.manufacturerId.name === brandOption.name);
     }
-  
+
     setSearchProduct(filtered);
   }, [products, query, categoriesOptions, brandOption]);
-  
+
 
   const paginatedProducts = searchProduct.slice(
     (currentPage - 1) * itemsPerPage,
@@ -112,8 +110,8 @@ useEffect(() => {
     setCategoriesOptions([]);
     setBrandOption(null);
     setSearchParams({});
-};
-  
+  };
+
 
   return (
     <div className=" w-full h-auto flex flex-col lg:flex-row justify-center pb-[10vh] pt-7">
