@@ -2,8 +2,10 @@ import React from 'react';
 import { Menu } from 'antd';
 import { UserOutlined, ShoppingCartOutlined, HistoryOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useContext } from 'react';
 
 function UserOptionMenu() {
+    
     const navigate = useNavigate();
     const location = useLocation();
 

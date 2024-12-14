@@ -15,8 +15,26 @@ export const AppProvider = ({ children }) => {
   const [shop, setShop] = useState([]);
   const [banners, setBanners] = useState([]);
   const [userCart, setUserCart] = useState([]);
-
+  const [userInfo, setUserInfo] = useState([]);
   const id = localStorage.getItem("id")
+
+  
+  const fetchUserInfo = (id) => {
+    if (!id) {
+        console.log("Không có user");
+        return;
+    }
+
+    axios.get(`http://localhost/be-shopbangiay/api/user.php?userId=` + id)
+        .then((res) => {
+          setUserInfo(res.data);
+            console.log(res.data);
+            return
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
 
   const fetchCartUser = (id) => {
       if (!id) {
@@ -142,6 +160,7 @@ export const AppProvider = ({ children }) => {
     }
 
     fetchCartUser(id);
+    fetchUserInfo(id)
   }, [id]);
 
   return (
@@ -173,6 +192,9 @@ export const AppProvider = ({ children }) => {
         fetchBanners,
         userCart,
         fetchCartUser,
+        userInfo,
+        setUserInfo,
+        fetchUserInfo
       }}
     >
       {children}

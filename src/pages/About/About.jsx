@@ -12,7 +12,7 @@ const Introduce = () => {
     <div className="w-full h-auto flex flex-col items-center gap-[150px] py-5 pb-20 overflow-hidden mb-20">
       <div className="w-11/12">
         <div className="w-2/3">
-          <Breadcrumb />
+          <Breadcrumb pageName="Giới thiệu" />
         </div>
         <div className="w-full flex flex-col gap-[150px] mt-10">
           <div className="w-full flex flex-col lg:flex-row gap-10 items-center lg:items-start xl:items-center">

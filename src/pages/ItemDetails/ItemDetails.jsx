@@ -10,11 +10,9 @@ import { toast } from "react-toastify";
 const ItemDetails = () => {
   const { slugId } = useParams();
   const { products, fetchCartUser } = useContext(DataContexts)
-  const { products, fetchCartUser } = useContext(DataContexts)
   const lastDashIndex = slugId.lastIndexOf("-");
   const productId = slugId.slice(lastDashIndex + 1);
   const userId = localStorage.getItem('id');
-  const [items, setItems] = useState([])
   const [items, setItems] = useState([])
 
   const [quantity, setQuantity] = useState(1);
@@ -62,7 +60,6 @@ const ItemDetails = () => {
     })
       .then((res) => {
         if (res.data.success == false) {
-          console.log(res.data);
           toast.error('Thêm vào giỏ hàng thất bại', {
             position: "top-right",
             autoClose: 2000,
@@ -98,7 +95,6 @@ const ItemDetails = () => {
 
 
   }
-  }
 
   const handleOrderClick = async () => {
     const payload = [{
@@ -106,13 +102,14 @@ const ItemDetails = () => {
       name: productName,
       price: Number(price),
       quantity: Number(quantity),
+      discount: Number(discount),
       size: selectedSize.size.toString(),
       image: images[0]
+      
     }]
 
     navigate('/payment', { state: payload });
 
-  };
   };
 
 
@@ -128,16 +125,12 @@ const ItemDetails = () => {
       setActiveImage(images[0]);
     }
   }, [activeImg, images]);
-  }, [activeImg, images]);
 
   useEffect(() => {
     if (productName) {
       const temps = [
-      const temps = [
         { name: 'Trang chủ', href: '/' },
         { name: 'Sản phẩm', href: '/san-pham' },
-        { name: productName }
-      ]
         { name: productName }
       ]
       setItems(temps);
@@ -162,11 +155,8 @@ const ItemDetails = () => {
   };
 
 
-
   const refProducts = products.filter(
     (product) =>
-      product.manufacturerId.name === brandName.name ||
-      product.categoryId.name === categoryName.name
       product.manufacturerId.name === brandName.name ||
       product.categoryId.name === categoryName.name
   );
@@ -184,9 +174,7 @@ const ItemDetails = () => {
   return (
     <>
       <Breadcrumb items={items} />
-      <Breadcrumb items={items} />
       <div className="w-11/12 h-auto flex flex-col py-5 mb-20  items-center place-self-center">
-
 
         <div className="w-11/12 px-24 flex ">
           <div className="w-full flex flex-row justify-between gap-0">
@@ -197,8 +185,6 @@ const ItemDetails = () => {
                     key={index}
                     src={image}
                     alt=""
-                    className={`rounded-lg hover:scale-105 hover:brightness-105 w-full h-[121px] object-cover cursor-pointer ${activeImg === image ? "opacity-100" : "opacity-20"
-                      }`}
                     className={`rounded-lg hover:scale-105 hover:brightness-105 w-full h-[121px] object-cover cursor-pointer ${activeImg === image ? "opacity-100" : "opacity-20"
                       }`}
                     onMouseOver={() => {
@@ -230,8 +216,6 @@ const ItemDetails = () => {
                     <Link
                       to={`/san-pham?brand=${brandName.name}`}
                       className="capitalize font-bold text-sky-600 group-hover:text-white">
-                      to={`/san-pham?brand=${brandName.name}`}
-                      className="capitalize font-bold text-sky-600 group-hover:text-white">
                       {brandName.name}
                     </Link>
                   </div>
@@ -240,8 +224,6 @@ const ItemDetails = () => {
                   Thể loại giày:
                   <div className=" flex flex-row group ml-1 hover:bg-slate-700  px-2 py-1 rounded-lg">
                     <Link
-                      to={`/san-pham?categories=${categoryName.categoryId}`}
-                      className="font-bold text-sky-600 group-hover:text-white">
                       to={`/san-pham?categories=${categoryName.categoryId}`}
                       className="font-bold text-sky-600 group-hover:text-white">
                       {categoryName.name}
@@ -257,21 +239,6 @@ const ItemDetails = () => {
                       {formatNumber(price - (price * discount) / 100)}đ
                     </p>
 
-                {discount != 0 ? (
-                  <div className="w-full flex flex-row items-end gap-3">
-                    <p className="font-bold text-4xl">
-                      {formatNumber(price - (price * discount) / 100)}đ
-                    </p>
-
-                    <p className="text-4xl font-medium text-gray-500 line-through">
-                      {formatNumber(price)}đ
-                    </p>
-                  </div>
-                ) : (
-                  <div className="w-full flex flex-row items-end gap-3">
-                    <p className="font-bold text-4xl">
-                      {formatNumber(price)}đ
-                    </p>
                     <p className="text-4xl font-medium text-gray-500 line-through">
                       {formatNumber(price)}đ
                     </p>
@@ -284,10 +251,6 @@ const ItemDetails = () => {
 
                   </div>
                 )}
-
-                  </div>
-                )}
-
 
 
 
@@ -323,7 +286,6 @@ const ItemDetails = () => {
                 <button className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none ">
                   <p
                     onClick={handleOrderClick}
-
                     className="text-lg w-full text-black group-hover:text-white font-bold "
                   >
                     Mua ngay
@@ -331,7 +293,6 @@ const ItemDetails = () => {
                 </button>
                 <button
                   onClick={handleAddCartClick}
-
                   className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start  border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none "
                 >
                   <p className="text-lg w-full text-black group-hover:text-white font-bold">

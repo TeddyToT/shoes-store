@@ -67,6 +67,7 @@ function PaymentInfoForm() {
                 name: item.productId.name,
                 price: Number(item.productId.price),
                 quantity: Number(item.quantity),
+                discount: Number(item.productId.discount),
                 size: item.size,
                 image: item.productId.mainImage
             }));
@@ -82,9 +83,16 @@ function PaymentInfoForm() {
 
     };
 
-    const shippingFee = 30000;
-    const productAmount = orderDetails.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const totalAmount = productAmount + shippingFee;
+
+    const productAmount = orderDetails.reduce((total, item) =>
+        { 
+                return total + ((Number(item.price)*(1-Number(item.discount)/100)) * Number(item.quantity));
+
+
+        }
+        ,0
+    )
+    const totalAmount = productAmount ;
 
 
 
@@ -106,7 +114,7 @@ function PaymentInfoForm() {
 
         };
         console.log("Dữ liệu gửi đi: ", orderData);
-        if (orderData.paymentMethod == 'cash') {
+        if (orderData.paymentMethod == 'Cod') {
 
             try {
                 const response = await fetch('http://localhost/be-shopbangiay/api/invoice.php', {
@@ -360,15 +368,7 @@ function PaymentInfoForm() {
                     ))}
 
                     <Divider style={{ border: '1px solid black' }} />
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ fontWeight: '500' }}>Tạm tính:</span>
-                        <span style={{ fontWeight: '500' }}>{productAmount.toLocaleString()}đ</span>
-                    </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-                        <span style={{ fontWeight: '500' }}>Phí giao hàng:</span>
-                        <span style={{ fontWeight: '500' }}>{shippingFee.toLocaleString()}đ</span>
-                    </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', marginTop: '10px' }}>
                         <span style={{ fontSize: '20px' }}>Tổng tiền:</span>

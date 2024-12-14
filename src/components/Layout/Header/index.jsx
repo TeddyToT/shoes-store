@@ -15,7 +15,7 @@ import { useState, useEffect, useContext } from 'react';
 import { DataContexts } from '../../../AppContexts/Contexts';
 function Header() {
     const userID = localStorage.getItem("id")
-    const {userCart, fetchCartUser} = useContext(DataContexts)
+    const {userCart, fetchCartUser, userInfo, shop} = useContext(DataContexts)
     const { Header } = Layout;
     const { Search } = Input;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,14 +42,15 @@ function Header() {
         setQuery("");
     };
 
-    
+    const [firstLogin, setFirstLogin] = useState(true)
 
     useEffect(() => {
-        if (userID) {
-            // fetchCartUser(userID);
+        if (userID && firstLogin) {
+            fetchCartUser(userID);
+            setFirstLogin(false)
         }
         return
-    }, [userID, fetchCartUser]);
+    }, [userID, fetchCartUser, firstLogin]);
     
 
 
@@ -88,7 +89,7 @@ function Header() {
             color: '#1677ff'
         },
         logoText: {
-            fontSize: windowWidth <= 480 ? '1.5rem' : '4rem',
+            fontSize: windowWidth <= 480 ? '1.5rem' : '2rem',
             fontWeight: 'bold'
         },
         mobileMenuButton: {
@@ -173,10 +174,11 @@ function Header() {
         <Header style={styles.header}>
             <div style={styles.container}>
                 {/* Logo Section */}
-                <div style={styles.logo}>
-                    <FontAwesomeIcon icon={faMeteor} style={styles.logoIcon} />
-                    <span style={styles.logoText}>Feduu</span>
-                </div>
+                <Link to={"/"} style={styles.logo} className='cursor-pointer'>
+                    <img className='w-[70px] sm:w-[130px]' src={shop.logo} />
+
+
+                </Link>
 
                 {/* Mobile Menu Button */}
                 <button
@@ -212,7 +214,7 @@ function Header() {
                         {userID ? (
                             <div style={styles.textContainer}>
                                 <h5 style={styles.heading}>Tài khoản</h5>
-                                <a href="/account" style={styles.link}>Username</a>
+                                <a href="/account" style={styles.link}>{userInfo.username?userInfo.username:"Username"}</a>
                             </div>
                         )
                             :
@@ -225,14 +227,19 @@ function Header() {
 
 
                     </div>
+{
+    userID?(                    <div style={styles.accountCart}>
+        <FontAwesomeIcon icon={faBagShopping} style={styles.icon} />
+        <div style={styles.textContainer}>
+            <h5 style={styles.heading}>Giỏ hàng</h5>
+            <a href="/cart" style={styles.link}>Số sản phẩm: {userCart.length}</a>
+        </div>
+    </div>):(
+        <div>
+            </div>
+    )
+}
 
-                    <div style={styles.accountCart}>
-                        <FontAwesomeIcon icon={faBagShopping} style={styles.icon} />
-                        <div style={styles.textContainer}>
-                            <h5 style={styles.heading}>Giỏ hàng</h5>
-                            <a href="/cart" style={styles.link}>Số sản phẩm: {userCart.length}</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </Header>

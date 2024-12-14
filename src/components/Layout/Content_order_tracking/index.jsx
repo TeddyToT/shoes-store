@@ -50,11 +50,19 @@ function ContentOderTracking() {
     };
 
 
-    const calculateTotal = (items) => {
-        if (!items) return 0;
-        return items.reduce((sum, item) => {
-            return sum + (Number(item.productId.price) * Number(item.quantity));
-        }, 0);
+    const calculatePrice = (item) => {
+        if (!item) return 0;
+        const sum = 0;
+            if (item.productId.discount == 0)
+            {
+                return sum + (Number(item.productId.price) * Number(item.quantity));
+
+            }
+            else{
+                return sum + ((Number(item.productId.price)*(1-Number(item.productId.discount)/100)) * Number(item.quantity));
+
+            }
+       
     };
 
     const OrderDetail = ({ order }) => (
@@ -121,7 +129,7 @@ function ContentOderTracking() {
                     justifyContent: 'space-between'
                 }}>
                     <span style={{ fontWeight: 'bold' }}>Thông tin đơn hàng</span>
-                    <span style={{ color: '#1677ff' }}>{calculateTotal(order.items).toLocaleString()}đ</span>
+                    <span style={{ color: '#1677ff' }}>{Number(order.totalPrice).toLocaleString()}đ</span>
                 </h3>
                 {order.items.map((item, index) => (
                     <div key={index} className='cart__info__item' style={{
@@ -144,7 +152,7 @@ function ContentOderTracking() {
                             }}>Số lượng: {item.quantity}</p>
                         </div>
                         <p className="total-price" style={{ fontWeight: '500' }}>
-                            {(Number(item.productId.price) * Number(item.quantity)).toLocaleString()}đ
+                            {(Number(calculatePrice(item))).toLocaleString()}đ
                         </p>
                     </div>
                 ))}

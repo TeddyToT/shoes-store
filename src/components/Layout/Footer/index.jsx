@@ -1,9 +1,13 @@
 
+
 import { Button, Input, Layout } from 'antd'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMeteor, faLocationDot, faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { DataContexts } from '../../../AppContexts/Contexts';
 function Footer() {
+    const {shop} = useContext(DataContexts)
     const { Footer } = Layout;
     return (
         <Footer style={{
@@ -26,24 +30,11 @@ function Footer() {
                         alignItems: 'flex-start',
                         gap: '16px'
                     }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            marginBottom: '16px'
-                        }}>
-                            <FontAwesomeIcon
-                                icon={faMeteor}
-                                style={{
-                                    fontSize: 'clamp(40px, 5vw, 60px)',
-                                    color: '#1677ff'
-                                }}
-                            />
-                            <span style={{
-                                fontSize: 'clamp(40px, 5vw, 60px)',
-                                fontWeight: 'bold'
-                            }}>Feduu</span>
-                        </div>
+                          <Link to={"/"} className='cursor-pointer'>
+                    <img className='w-[70px] sm:w-[130px]' src={shop.logo} />
+
+
+                </Link>
                         <ul style={{
                             listStyle: 'none',
                             fontSize: 'clamp(14px, 1.6vw, 16px)',
@@ -52,15 +43,15 @@ function Footer() {
                         }}>
                             <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center' }}>
                                 <FontAwesomeIcon icon={faLocationDot} style={{ marginRight: '8px', fontSize: '20px' }} />
-                                Trường Đại học Công Nghệ Thông Tin
+                                {shop.address}
                             </li>
                             <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center' }}>
                                 <FontAwesomeIcon icon={faEnvelope} style={{ marginRight: '8px', fontSize: '20px' }} />
-                                2152xxxx@gmail.com
+                                {shop.email}
                             </li>
                             <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center' }}>
                                 <FontAwesomeIcon icon={faPhone} style={{ marginRight: '8px', fontSize: '20px' }} />
-                                0123456789
+                                {shop.phone}
                             </li>
                         </ul>
                     </div>

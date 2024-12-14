@@ -8,7 +8,7 @@ import Checkbox from "../../components/Checkbox/Checkbox.jsx";
 import RadioCheckBox from "../../components/Checkbox/RadioCheckbox.jsx";
 import { DataContexts } from "../../AppContexts/Contexts.jsx";
 import "../../hideScrollbar.css";
-
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb.jsx";
 const AllProducts = () => {
   const { products, categories, manufacturers } = useContext(DataContexts);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -114,7 +114,13 @@ const AllProducts = () => {
 
 
   return (
+    <div className="py-5 pb-20 w-11/12">
+      <div className="w-2/3">
+      <Breadcrumb pageName="Sản phẩm" />
+      </div>
+      
     <div className=" w-full h-auto flex flex-col lg:flex-row justify-center pb-[10vh] pt-7">
+      
       <div className="w-11/12 flex place-self-center">
         <div className="flex flex-col lg:flex-row h-full">
           <div className="w-full flex md:flex-row flex-col gap-2">
@@ -186,6 +192,7 @@ const AllProducts = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
