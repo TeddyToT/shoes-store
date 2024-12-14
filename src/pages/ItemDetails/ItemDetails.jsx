@@ -9,11 +9,11 @@ import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import { toast } from "react-toastify";
 const ItemDetails = () => {
   const { slugId } = useParams();
-  const {products, fetchCartUser} = useContext(DataContexts)
+  const { products, fetchCartUser } = useContext(DataContexts)
   const lastDashIndex = slugId.lastIndexOf("-");
   const productId = slugId.slice(lastDashIndex + 1);
   const userId = localStorage.getItem('id');
-const [items, setItems] = useState([])
+  const [items, setItems] = useState([])
 
   const [quantity, setQuantity] = useState(1);
 
@@ -57,58 +57,58 @@ const [items, setItems] = useState([])
       quantity: Number(quantity),
       size: selectedSize.size.toString(),
     })
-        .then((res) => {
-            if (res.data.success == false) {
-              toast.error('Thêm vào giỏ hàng thất bại', {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "light",
-                });
-              
-            }
-            else {
-              
-              toast.success('Thêm vào giỏ hàng thành công', {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "light",
-                });
-                fetchCartUser(userId)
-                
-            }
+      .then((res) => {
+        if (res.data.success == false) {
+          toast.error('Thêm vào giỏ hàng thất bại', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: "light",
+          });
+
         }
-        )
-        .catch(err => {
-            console.log(err)
-        })
-    
+        else {
 
-}
+          toast.success('Thêm vào giỏ hàng thành công', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: "light",
+          });
+          fetchCartUser(userId)
 
-const handleOrderClick = async () => {
-  const items = [{
-    productId: productId.toString(),
-    quantity: Number(quantity),
-    size: selectedSize.size.toString(),
-  }]
+        }
+      }
+      )
+      .catch(err => {
+        console.log(err)
+      })
 
-  const payload = {
+
+  }
+
+  const handleOrderClick = async () => {
+    const items = [{
+      productId: productId.toString(),
+      quantity: Number(quantity),
+      size: selectedSize.size.toString(),
+    }]
+
+    const payload = {
       userId: userId,
       items: items
-  };
-  navigate('/mua-ngay', { state: payload });
+    };
+    navigate('/mua-ngay', { state: payload });
 
-};
+  };
 
 
   useEffect(() => {
@@ -122,15 +122,15 @@ const handleOrderClick = async () => {
     if (!activeImg && images.length > 0) {
       setActiveImage(images[0]);
     }
-  }, [activeImg, images]); 
+  }, [activeImg, images]);
 
   useEffect(() => {
     if (productName) {
-      const temps=[
+      const temps = [
         { name: 'Trang chủ', href: '/' },
         { name: 'Sản phẩm', href: '/san-pham' },
-        { name: productName}
-    ]
+        { name: productName }
+      ]
       setItems(temps);
     }
   }, [activeImg, images, productName]);
@@ -152,11 +152,11 @@ const handleOrderClick = async () => {
     }, 1000);
   };
 
-  
+
   const refProducts = products.filter(
     (product) =>
-      product.manufacturerId.name === brandName.name || 
-    product.categoryId.name === categoryName.name
+      product.manufacturerId.name === brandName.name ||
+      product.categoryId.name === categoryName.name
   );
 
   const shuffle = (array) => {
@@ -171,9 +171,9 @@ const handleOrderClick = async () => {
 
   return (
     <>
-    <Breadcrumb items={items}/>
+      <Breadcrumb items={items} />
       <div className="w-11/12 h-auto flex flex-col py-5 mb-20  items-center place-self-center">
-      
+
         <div className="w-11/12 px-24 flex ">
           <div className="w-full flex flex-row justify-between gap-0">
             <div className="flex flex-row max-h-[500px] gap-1">
@@ -183,9 +183,8 @@ const handleOrderClick = async () => {
                     key={index}
                     src={image}
                     alt=""
-                    className={`rounded-lg hover:scale-105 hover:brightness-105 w-full h-[121px] object-cover cursor-pointer ${
-                      activeImg === image ? "opacity-100" : "opacity-20"
-                    }`}
+                    className={`rounded-lg hover:scale-105 hover:brightness-105 w-full h-[121px] object-cover cursor-pointer ${activeImg === image ? "opacity-100" : "opacity-20"
+                      }`}
                     onMouseOver={() => {
                       if (isHoverEnabled) setActiveImage(image);
                     }}
@@ -213,8 +212,8 @@ const handleOrderClick = async () => {
                   Hãng giày:
                   <div className="group ml-1 hover:bg-slate-700  px-2 py-1 rounded-lg">
                     <Link
-                    to={`/san-pham?brand=${brandName.name}`}
-                    className="capitalize font-bold text-sky-600 group-hover:text-white">
+                      to={`/san-pham?brand=${brandName.name}`}
+                      className="capitalize font-bold text-sky-600 group-hover:text-white">
                       {brandName.name}
                     </Link>
                   </div>
@@ -223,36 +222,36 @@ const handleOrderClick = async () => {
                   Thể loại giày:
                   <div className=" flex flex-row group ml-1 hover:bg-slate-700  px-2 py-1 rounded-lg">
                     <Link
-                    to={`/san-pham?categories=${categoryName.categoryId}`}
-                    className="font-bold text-sky-600 group-hover:text-white">
+                      to={`/san-pham?categories=${categoryName.categoryId}`}
+                      className="font-bold text-sky-600 group-hover:text-white">
                       {categoryName.name}
                     </Link>
                   </div>
                 </p>
               </div>
               <div className="w-full border-b-2 border-gray-500 mb-5 pb-5">
-                
-                  {discount!=0?(
-                    <div className="w-full flex flex-row items-end gap-3">
-                                        <p className="font-bold text-4xl">
-                    {formatNumber(price - (price * discount) / 100)}đ
-                  </p>
 
-                  <p className="text-4xl font-medium text-gray-500 line-through">
-                    {formatNumber(price)}đ
-                  </p>
-                      </div>
-                  ):(
-<div className="w-full flex flex-row items-end gap-3">
-                  <p className="font-bold text-4xl">
-                    {formatNumber(price)}đ
-                  </p>
+                {discount != 0 ? (
+                  <div className="w-full flex flex-row items-end gap-3">
+                    <p className="font-bold text-4xl">
+                      {formatNumber(price - (price * discount) / 100)}đ
+                    </p>
 
-                      </div>
-                  )}
-                  
+                    <p className="text-4xl font-medium text-gray-500 line-through">
+                      {formatNumber(price)}đ
+                    </p>
+                  </div>
+                ) : (
+                  <div className="w-full flex flex-row items-end gap-3">
+                    <p className="font-bold text-4xl">
+                      {formatNumber(price)}đ
+                    </p>
 
-                
+                  </div>
+                )}
+
+
+
               </div>
               <div className="w-full">
                 <p className="text-lg font-bold text-left my-2">

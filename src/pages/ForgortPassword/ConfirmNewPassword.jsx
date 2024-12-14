@@ -4,9 +4,9 @@ import logo from "../../assets/images/logo.png";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import { CiMoneyCheck1, CiLock, CiMail } from "react-icons/ci";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-
 import axios from "axios";
 import { toast } from "react-toastify";
+
 const ConfirmNewPassword = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
