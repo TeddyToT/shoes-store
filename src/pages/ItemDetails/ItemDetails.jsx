@@ -1,21 +1,17 @@
 import { useState, useEffect, useContext } from "react";
 import QuantitySelection from "../../components/QuantitySelection";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useParams, Link, useNavigate } from "react-router-dom";
 import RecommentItem from "../../components/RecommentItem/RecommentItem";
 import axios from "axios";
 import { DataContexts } from "../../AppContexts/Contexts";
 import SizeSelect from "./SizeSelect";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import { toast } from "react-toastify";
-import { toast } from "react-toastify";
 const ItemDetails = () => {
   const { slugId } = useParams();
   const { products, fetchCartUser } = useContext(DataContexts)
-  const { products, fetchCartUser } = useContext(DataContexts)
   const lastDashIndex = slugId.lastIndexOf("-");
   const productId = slugId.slice(lastDashIndex + 1);
-  const userId = localStorage.getItem('id');
   const userId = localStorage.getItem('id');
   const [items, setItems] = useState([])
 
@@ -31,7 +27,6 @@ const ItemDetails = () => {
   const [price, setPrice] = useState(0);
   const [selectedSize, setSelectedSize] = useState({});
 
-  const navigate = useNavigate()
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -65,6 +60,7 @@ const ItemDetails = () => {
     })
       .then((res) => {
         if (res.data.success == false) {
+          console.log(res.data);
           toast.error('Thêm vào giỏ hàng thất bại', {
             position: "top-right",
             autoClose: 2000,
@@ -240,7 +236,6 @@ const ItemDetails = () => {
                   <div className="w-full flex flex-row items-end gap-3">
                     <p className="font-bold text-4xl">
                       {formatNumber(price - (price * discount) / 100)}đ
-                      {formatNumber(price - (price * discount) / 100)}đ
                     </p>
 
                     <p className="text-4xl font-medium text-gray-500 line-through">
@@ -250,7 +245,6 @@ const ItemDetails = () => {
                 ) : (
                   <div className="w-full flex flex-row items-end gap-3">
                     <p className="font-bold text-4xl">
-                      {formatNumber(price)}đ
                       {formatNumber(price)}đ
                     </p>
 
@@ -291,7 +285,7 @@ const ItemDetails = () => {
                 <button className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none ">
                   <p
                     onClick={handleOrderClick}
-                    onClick={handleOrderClick}
+
                     className="text-lg w-full text-black group-hover:text-white font-bold "
                   >
                     Mua ngay
@@ -299,7 +293,7 @@ const ItemDetails = () => {
                 </button>
                 <button
                   onClick={handleAddCartClick}
-                  onClick={handleAddCartClick}
+
                   className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start  border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none "
                 >
                   <p className="text-lg w-full text-black group-hover:text-white font-bold">
