@@ -47,7 +47,7 @@ const Home = () => {
             {banners.map((banner, index) => {
               return (
                 <SwiperSlide key={index}>
-                  <img src={banner.link} className="w-full sm:h-screen h-[50vh]" />
+                  <img src={banner.link} className="w-full md:h-[80vh] h-[50vh]" />
                 </SwiperSlide>
               );
             })}
@@ -55,12 +55,12 @@ const Home = () => {
         </div>
       </div>
       <div className="w-11/12 flex flex-col place-self-center place-content-center">
-      <div className="flex flex-row md:w-3/4 w-full justify-around place-self-center place-content-center md:gap-4 gap-1">
+      <div className="flex flex-col sm:flex-row lg:w-3/4 w-full h-fit justify-around items-center place-self-center place-content-center md:gap-4 gap-1">
         
         <InfoBox
         icon={TbTruckDelivery} 
-        title="Vận chuyển TOÀN QUỐC"
-        content="Thanh toán khi nhận hàng"
+        title="Vận chuyển toàn quốc"
+        content="Nhận hàng mọi nơi"
       />
       <InfoBox
         icon={FiCheckCircle}
@@ -69,7 +69,7 @@ const Home = () => {
       />
       <InfoBox
         icon={MdOutlineAutorenew}
-        title="Đổi sản phẩm mới"
+        title="Đổi trả sản phẩm"
         content="Nếu sản phẩm lỗi"
       />
        <InfoBox

@@ -22,7 +22,7 @@ const Breadcrumb = ({ pageName, items }) => {
           />
           <Link
             to="/"
-            className="text-lg font-bold group-hover:text-blue-500"
+            className="sm:text-lg text-base font-bold group-hover:text-blue-500"
           >
             Trang chủ
           </Link>
@@ -32,17 +32,17 @@ const Breadcrumb = ({ pageName, items }) => {
             <div key={index} className="flex items-center ml-3">
               <FontAwesomeIcon
                 icon={faChevronRight}
-                className="text-lg mr-3"
+                className="sm:text-lg text-base mr-3"
               />
               {item.href ? (
                 <Link
                   to={item.href}
-                  className="text-lg font-bold hover:text-blue-500"
+                  className="sm:text-lg text-base font-bold hover:text-blue-500"
                 >
                   {item.name}
                 </Link>
               ) : (
-                <span className="text-lg font-bold">{item.name}</span>
+                <span className="sm:text-lg text-base font-bold">{item.name}</span>
               )}
             </div>
           ))}
