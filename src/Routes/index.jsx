@@ -1,4 +1,3 @@
-import OrderDetail from "../pages/order_detail"
 import Cart from "../pages/cart"
 import Home from "../Pages/Home"
 import OrderManagement from "../pages/order_management"
@@ -17,12 +16,13 @@ import ConfirmNewPassword from "../pages/ForgortPassword/ConfirmNewPassword"
 
 const publicRoutes = [
     { path: '/', conponent: Home },
-    { path: '/order-detail', conponent: OrderDetail },
-    { path: '/cart', conponent: Cart },
-    { path: '/order-management', conponent: OrderManagement },
-    { path: '/account', conponent: Account },
-    { path: '/payment', conponent: Payment },
-    { path: '/ordertracking', conponent: OrderTracking },
+    { path: '/gio-hang', conponent: Cart },
+    { path: '/tai-khoan/lich-su-don-hang', conponent: OrderManagement },
+    { path: '/tai-khoan', conponent: Account },
+    { path: '/thanh-toan', conponent: Payment },
+    { path: '/tai-khoan/theo-doi-don-hang', conponent: OrderTracking },
+
+
     {path:"/san-pham/:slugId", conponent: ItemDetails},
     {path:"/san-pham", conponent: AllProducts},
     {path:"/dang-nhap", conponent: Login},

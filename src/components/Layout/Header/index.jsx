@@ -214,7 +214,7 @@ function Header() {
                         {userID ? (
                             <div style={styles.textContainer}>
                                 <h5 style={styles.heading}>Tài khoản</h5>
-                                <a href="/account" style={styles.link}>{userInfo.username?userInfo.username:"Username"}</a>
+                                <a href="/tai-khoan" style={styles.link}>{userInfo.username?userInfo.username:"Username"}</a>
                             </div>
                         )
                             :
@@ -232,7 +232,7 @@ function Header() {
         <FontAwesomeIcon icon={faBagShopping} style={styles.icon} />
         <div style={styles.textContainer}>
             <h5 style={styles.heading}>Giỏ hàng</h5>
-            <a href="/cart" style={styles.link}>Số sản phẩm: {userCart.length}</a>
+            <a href="/gio-hang" style={styles.link}>Số sản phẩm: {userCart.length}</a>
         </div>
     </div>):(
         <div>

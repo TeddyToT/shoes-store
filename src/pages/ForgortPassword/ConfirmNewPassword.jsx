@@ -133,7 +133,7 @@ const ConfirmNewPassword = () => {
   const items = [
     { name: 'Trang chủ', href: '/' },
     { name: 'Đăng nhập', href: '/dang-nhap' },
-    { name: 'Lấy lại mật khẩu', href: '/dang-nhap/quen-mat-khau' },
+    { name: 'Quên mật khẩu', href: '/dang-nhap/quen-mat-khau' },
     { name: 'Xác nhận đổi mật khẩu' }
 
   ]

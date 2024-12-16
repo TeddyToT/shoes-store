@@ -18,11 +18,11 @@ const Breadcrumb = ({ pageName, items }) => {
           {/* Breadcrumb gốc "Trang chủ" */}
           <FontAwesomeIcon
             icon={faHouse}
-            className="text-xl mx-3 group-hover:text-blue-500"
+            className="text-xl mx-3 hover:text-blue-500"
           />
           <Link
             to="/"
-            className="sm:text-lg text-base font-bold group-hover:text-blue-500"
+            className="sm:text-lg text-base font-bold hover:text-blue-500"
           >
             Trang chủ
           </Link>

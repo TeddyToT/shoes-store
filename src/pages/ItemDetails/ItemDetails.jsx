@@ -137,7 +137,7 @@ const ItemDetails = () => {
       
     }]
 
-    navigate('/payment', { state: payload });
+    navigate('/thanh-toan', { state: payload });
 
   };
 
@@ -240,7 +240,7 @@ const ItemDetails = () => {
               </div>
             </div>
 
-            <div className="w-full md:w-1/3 lg:w-5/12 md:bg-red-500 lg:bg-slate-600 xl:bg-neutral-400 ">
+            <div className="w-full md:w-1/3 lg:w-5/12 ">
               <div className="w-full pb-5 mb-5 border-b-2 border-gray-500">
                 <p className="w-[120%] lg:text-4xl text-2xl md:text-xl font-bold mt-2 mb-1">{productName}</p>
                 <p className="pt-5 text-base font-bold flex flex-row items-center">

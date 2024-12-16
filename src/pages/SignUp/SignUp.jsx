@@ -163,7 +163,7 @@ const SignUp = () => {
 
   return (
     <Layout>
-      <Breadcrumb pageName="Đăng nhập" />
+      <Breadcrumb pageName="Đăng ký" />
 
       <div className="mt-5 mb-10 rounded-sm border border-strokeshadow-default ">
         <div className="flex  md:flex-row items-center">

@@ -1,13 +1,10 @@
-import { Layout } from "antd";
 import ContentAccount from "../../components/Layout/Content_account";
 
 function Account() {
     return (
-        <Layout>
 
-            <ContentAccount />
+        <ContentAccount />
 
-        </Layout>
     );
 }
 

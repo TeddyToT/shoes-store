@@ -2,7 +2,7 @@ import  { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
-
+import { CiMoneyCheck1, CiLock, CiMail } from "react-icons/ci";
 import axios from "axios";
 import { toast } from "react-toastify";
 const ForgotPassowrd = () => {
@@ -86,7 +86,7 @@ const ForgotPassowrd = () => {
 const items=[
     { name: 'Trang chủ', href: '/' },
     { name: 'Đăng nhập', href: '/dang-nhap' },
-    { name: 'Trang chủ'}
+    { name: 'Quên mật khẩu'}
 ]
   return (
     <div>

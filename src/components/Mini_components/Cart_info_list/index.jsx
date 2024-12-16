@@ -1,13 +1,13 @@
 
 import { Typography, Table, InputNumber, notification, Button, Divider, Input, Row, Col } from "antd";
 import { CloseCircleOutlined } from "@ant-design/icons";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-
+import { DataContexts } from "../../../AppContexts/Contexts";
 const { Text } = Typography;
 
 const CartInfoList = () => {
+    const {fetchCartUser} = useContext(DataContexts)
     const [cartData, setCartData] = useState([]);
     const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
@@ -82,7 +82,7 @@ const CartInfoList = () => {
             const res = await response.json();
 
             if (res.success == true) {
-                navigate('/payment');
+                navigate('/thanh-toan');
             } else {
                 console.error('Failed to update cart:', res.statusText);
                 notification.error({
@@ -132,6 +132,7 @@ const CartInfoList = () => {
                         description: 'Sản phẩm đã được xóa khỏi giỏ hàng.',
                         showProgress: true,
                     });
+                    fetchCartUser(userId)
                     return updatedData;
                 });
             } else {
