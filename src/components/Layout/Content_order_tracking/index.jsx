@@ -35,11 +35,15 @@ function ContentOderTracking() {
             const response = await fetch(`http://localhost/be-shopbangiay/api/invoice.php?userId=${userId}`);
             const data = await response.json();
 
-            const transformedStatus = data.map((order) => {
+            const filteredOrders = data.filter(order =>
+                order.state === 'Pending');
+
+            const transformedStatus = filteredOrders.map((order) => {
                 order.state = order.state === 'Done' ? 'Đã giao' :
                     order.state === 'Pending' ? 'Đang giao' : order.state;
                 return order;
             })
+            transformedStatus.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
 
             setOrders(transformedStatus);
 
@@ -53,16 +57,20 @@ function ContentOderTracking() {
     const calculatePrice = (item) => {
         if (!item) return 0;
         const sum = 0;
-            if (item.productId.discount == 0)
-            {
-                return sum + (Number(item.productId.price) * Number(item.quantity));
+        if (item.productId.discount == 0) {
+            return sum + (Number(item.productId.price) * Number(item.quantity));
 
-            }
-            else{
-                return sum + ((Number(item.productId.price)*(1-Number(item.productId.discount)/100)) * Number(item.quantity));
+        }
+        else {
+            return sum + ((Number(item.productId.price) * (1 - Number(item.productId.discount) / 100)) * Number(item.quantity));
 
-            }
-       
+        }
+
+    };
+    const format = (dateTimeString) => {
+        const [datePart, timePart] = dateTimeString.split(' ');
+        const [year, month, day] = datePart.split('-');
+        return `${day}/${month}/${year} ${timePart}`;
     };
 
     const OrderDetail = ({ order }) => (
@@ -84,7 +92,7 @@ function ContentOderTracking() {
                     <span>Mã đơn hàng:</span> <span>#{order.invoiceId}</span>
                 </p>
                 <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                    <span>Ngày đặt hàng:</span> <span>{order.orderDate}</span>
+                    <span>Ngày đặt hàng:</span> <span>{format(order.orderDate)}</span>
                 </p>
                 <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
                     <span>Hình thức thanh toán:</span> <span>{order.paymentMethod || 'Tiền mặt'}</span>
@@ -103,7 +111,8 @@ function ContentOderTracking() {
                 <div className='oder__info' style={{
                     backgroundColor: '#E5E7EB',
                     margin: '0 60px 20px',
-                    padding: '0 30px 10px'
+                    padding: '0 30px 10px',
+                    borderRadius: '10px'
                 }}>
                     <h3 style={{ margin: '10px 0 5px', fontWeight: 'bold' }}>Thông tin đặt hàng</h3>
                     <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
@@ -121,14 +130,15 @@ function ContentOderTracking() {
             <div className='cart__info' style={{
                 backgroundColor: '#E5E7EB',
                 margin: '0 60px 20px',
-                padding: '0 30px 10px'
+                padding: '0 30px 10px',
+                borderRadius: '10px'
             }}>
                 <h3 style={{
                     margin: '10px 0 5px',
                     display: 'flex',
                     justifyContent: 'space-between'
                 }}>
-                    <span style={{ fontWeight: 'bold' }}>Thông tin đơn hàng</span>
+                    <span style={{ fontWeight: 'bold' }}>Tổng giá trị</span>
                     <span style={{ color: '#1677ff' }}>{Number(order.totalPrice).toLocaleString()}đ</span>
                 </h3>
                 {order.items.map((item, index) => (
@@ -162,8 +172,8 @@ function ContentOderTracking() {
 
     return (
         <Content style={{
-            padding: '0 24px',
-            maxWidth: '1600px',
+            padding: '0 16px',
+            maxWidth: '1440px',
             margin: '0 auto',
             width: '100%'
         }}>
@@ -182,14 +192,13 @@ function ContentOderTracking() {
                 </div>
 
                 <div className="content__user__main" style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'minmax(350px, 450px) minmax(600px, 1000px)',
-                    gap: '40px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
                     padding: 'clamp(24px, 3vw, 32px)',
-                    maxWidth: '1500px',
+                    maxWidth: '1440px',
                     margin: '0 auto',
-                    justifyContent: 'center',
-                    alignItems: 'start'
+                    flexWrap: 'wrap',
                 }}>
                     <div className="user__aside" style={{
                         backgroundColor: '#fff',
@@ -198,7 +207,8 @@ function ContentOderTracking() {
                         border: '1px solid #e0e0e0',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                         width: '100%',
-                        height: '100%'
+                        maxWidth: '450px',
+                        maxHeight: '600px',
                     }}>
                         <div className='user__avatar' style={{
                             display: 'flex',
@@ -216,22 +226,24 @@ function ContentOderTracking() {
 
                     <div className="oder__tracking" style={{
                         backgroundColor: '#fff',
-                        padding: 'clamp(24px, 3vw, 36px)',
+                        padding: 'clamp(12px, 3vw, 18px)',
                         borderRadius: '12px',
                         border: '1px solid #e0e0e0',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                        width: '100%'
+                        width: '100%',
+                        maxWidth: '700px',
+                        maxHeight: '600px',
                     }}>
                         <div className='oder__tracking__label' style={{
                             fontSize: '30px',
                             fontWeight: '700',
-                            margin: '20px',
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            marginBottom: '5px'
                         }}>
                             Theo dõi đơn hàng
                         </div>
 
-                        <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+                        <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
                             {orders.map((order, index) => (
                                 <OrderDetail key={order.invoiceId} order={order} />
                             ))}

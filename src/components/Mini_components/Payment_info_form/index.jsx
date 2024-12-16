@@ -84,15 +84,14 @@ function PaymentInfoForm() {
     };
 
 
-    const productAmount = orderDetails.reduce((total, item) =>
-        { 
-                return total + ((Number(item.price)*(1-Number(item.discount)/100)) * Number(item.quantity));
+    const productAmount = orderDetails.reduce((total, item) => {
+        return total + ((Number(item.price) * (1 - Number(item.discount) / 100)) * Number(item.quantity));
 
 
-        }
-        ,0
+    }
+        , 0
     )
-    const totalAmount = productAmount ;
+    const totalAmount = productAmount;
 
 
 
@@ -133,6 +132,33 @@ function PaymentInfoForm() {
                         description: 'Đặt hàng thành công!',
                         showProgress: true,
                     });
+                    const user = {
+                        userId: userId
+                    }
+                    try {
+                        const response = await fetch('http://localhost/be-shopbangiay/api/cart.php', {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(user)
+                        });
+
+                        const res = await response.json();
+                        if (res.success == true) {
+                            console.log('Giỏ hàng đã được xóa thành công');
+                            navigate('/tai-khoan/theo-doi-don-hang');
+
+                        } else {
+                            console.error('Không thể xóa giỏ hàng:', res.message);
+                        }
+
+                    } catch (error) {
+                        console.error('Lỗi xóa cart sau thanh toán', error)
+                    }
+                    console.log('userData', user)
+
+
                 } else {
                     console.error('Failed to place order');
                     notification.error({
@@ -151,7 +177,6 @@ function PaymentInfoForm() {
                 console.log('Dữ liệu gửi đi:', JSON.stringify(orderData));
             }
         } else {
-
             axios.post('http://localhost/be-shopbangiay/api/payment.php', {
 
                 userId: orderData.userId,
@@ -172,8 +197,6 @@ function PaymentInfoForm() {
         }
 
     };
-
-
 
 
     useEffect(() => {
@@ -208,15 +231,45 @@ function PaymentInfoForm() {
 
                         if (!res.data || !res.data.success) {
                             toast.error(res.data?.message || "Lỗi hệ thống, thử lại sau");
+                            console.log('loi tra post invoice');
                             return;
+                        } else {
+                            console.log('thanh cong')
+                            toast.success("Tạo đơn hàng thành công");
+                            const user = {
+                                userId: userId
+                            }
+                            try {
+                                const response = await fetch('http://localhost/be-shopbangiay/api/cart.php', {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(user)
+                                });
+
+                                const res = await response.json();
+                                if (res.success == true) {
+                                    console.log('Giỏ hàng đã được xóa thành công');
+                                    navigate('/tai-khoan/theo-doi-don-hang');
+
+                                } else {
+                                    console.error('Không thể xóa giỏ hàng:', res.message);
+                                }
+
+                            } catch (error) {
+                                console.error('Lỗi xóa cart sau thanh toán', error)
+                            }
+
                         }
 
-                        toast.success("Tạo đơn hàng thành công");
+
                     } catch (error) {
                         console.error("API Error:", error);
                         toast.error("Không thể tạo đơn hàng. Vui lòng thử lại.",);
                     }
                 } else {
+                    console.log('loi lay param')
                     toast.error("Thanh toán thất bại");
                 }
             }

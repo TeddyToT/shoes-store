@@ -1,47 +1,18 @@
-import { Table } from 'antd';
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Table, Modal, Tag } from 'antd';
 
-const columns = [
-    {
-        title: <span style={{ display: 'block', fontSize: '18px', fontWeight: 'bold', textAlign: 'center' }}>Mã đơn hàng</span>,
-        dataIndex: 'order_id',
-    },
-    {
-        title: <span style={{ display: 'block', fontSize: '18px', fontWeight: 'bold', textAlign: 'center' }}>Ngày đặt hàng</span>,
-        dataIndex: 'order_date',
-    },
-    {
-        title: <span style={{ display: 'block', fontSize: '18px', fontWeight: 'bold', textAlign: 'center' }}>Tổng tiền</span>,
-        dataIndex: 'total',
-    },
-    {
-        title: <span style={{ display: 'block', fontSize: '18px', fontWeight: 'bold', textAlign: 'center' }}>Trạng thái</span>,
-        dataIndex: 'status',
-    },
-];
-
-function OdermanagementTable() {
+function OrderManagementTable() {
     const [dataSource, setDataSource] = useState([]);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
     useEffect(() => {
-        if (userId) { // Chỉ fetch khi có userId
+        if (userId) {
             fetchOrderData();
         }
     }, [userId]);
-
-
-    const getStatusColor = (status) => {
-        switch (status.toLowerCase()) {
-            case 'pending':
-                return '#faad14'; // màu vàng
-            case 'done':
-                return '#52c41a'; // màu xanh
-            default:
-                return '#1677ff';
-        }
-    };
 
     const fetchOrderData = async () => {
         try {
@@ -53,28 +24,13 @@ function OdermanagementTable() {
                     return sum + (Number(item.productId.price) * Number(item.quantity));
                 }, 0);
 
-                const state = order.state === 'Done' ? 'Đã giao' :
-                    order.state === 'Pending' ? 'Đang giao' : order.state;
-
                 return {
                     key: order.invoiceId,
-                    order_id: <span style={{ display: 'block', fontSize: '16px', textAlign: 'center' }}>
-                        {order.invoiceId}
-                    </span>,
-                    order_date: <span style={{ display: 'block', fontSize: '16px', textAlign: 'center' }}>
-                        {order.orderDate}
-                    </span>,
-                    total: <span style={{ display: 'block', fontSize: '16px', textAlign: 'center' }}>
-                        {total.toLocaleString()}đ
-                    </span>,
-                    status: <span style={{
-                        display: 'block',
-                        fontSize: '16px',
-                        textAlign: 'center',
-                        color: getStatusColor(order.state)
-                    }}>
-                        {state}
-                    </span>
+                    order_id: `#${order.invoiceId}`,
+                    order_date: new Date(order.orderDate).toLocaleDateString('vi-VN'),
+                    total: `${total.toLocaleString('vi-VN')}đ`,
+                    state: order.state === 'Done' ? 'Hoàn thành' : 'Đang xử lý',
+                    details: order,
                 };
             });
 
@@ -84,16 +40,111 @@ function OdermanagementTable() {
         }
     };
 
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Hoàn thành':
+                return 'green';
+            case 'Đang xử lý':
+                return 'orange';
+        }
+    };
+
+    const handleOpenModal = (order) => {
+        setSelectedOrder(order);
+        setIsModalVisible(true);
+    };
+
+    const columns = [
+        { title: 'Mã đơn hàng', dataIndex: 'order_id', key: 'order_id', align: 'center' },
+        { title: 'Ngày đặt hàng', dataIndex: 'order_date', key: 'order_date', align: 'center' },
+        { title: 'Tổng tiền', dataIndex: 'total', key: 'total', align: 'center' },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'state',
+            key: 'state',
+            align: 'center',
+            render: (status) => (
+                <Tag
+                    style={{
+                        color: status === 'Hoàn thành' ? '#52c41a' : '#faad14',
+                        fontWeight: 'bold',
+                    }}
+                >
+                    {status}
+                </Tag>
+            ),
+        },
+
+        {
+            title: 'Chi tiết',
+            dataIndex: 'details',
+            key: 'details',
+            align: 'center',
+            render: (order) => (
+                <a onClick={() => handleOpenModal(order)} style={{ color: '#1890ff', cursor: 'pointer' }}>
+                    Xem chi tiết
+                </a>
+            ),
+        },
+    ];
+
     return (
-        <Table
-            columns={columns}
-            dataSource={dataSource}
-            pagination={false}
-            scroll={{
-                y: 55 * 5,
-            }}
-        />
+        <>
+            <Table
+                columns={columns}
+                dataSource={dataSource}
+                pagination={{ pageSize: 4 }}
+            />
+
+            <Modal
+                title={`Chi tiết đơn hàng ${selectedOrder?.invoiceId}`}
+                visible={isModalVisible}
+                footer={null}
+                onCancel={() => setIsModalVisible(false)}
+            >
+                <div style={{
+                    marginBottom: '10px', display: 'flex',
+                    justifyContent: 'space-between'
+                }}>
+                    <strong>Trạng thái đơn hàng: </strong>
+                    <Tag
+                        style={{
+                            color: selectedOrder?.state === 'Done' ? '#52c41a' : '#faad14',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        {selectedOrder?.state === 'Done' ? 'Hoàn thành' : 'Đang xử lý'}
+                    </Tag>
+                </div>
+                {selectedOrder?.items.map((item, index) => (
+                    <div key={index} style={{ display: 'flex', marginBottom: '15px' }}>
+                        <img
+                            src={item.productId.mainImage}
+                            alt={item.productId.name}
+                            style={{ width: '80px', marginRight: '10px', borderRadius: '4px' }}
+                        />
+                        <div>
+                            <strong>{item.productId.name}</strong>
+                            <div>
+                                {item.quantity} x {Number(item.productId.price).toLocaleString('vi-VN')}đ
+                            </div>
+                            <div style={{ fontWeight: 'bold' }}>
+                                = {(Number(item.productId.price) * item.quantity).toLocaleString('vi-VN')}đ
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                <div style={{ fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
+                    Tổng cộng:{' '}
+                    {selectedOrder &&
+                        selectedOrder.items
+                            .reduce((sum, item) => sum + item.quantity * Number(item.productId.price), 0)
+                            .toLocaleString('vi-VN')}
+                    đ
+                </div>
+            </Modal>
+        </>
     );
 }
 
-export default OdermanagementTable;
+export default OrderManagementTable;
