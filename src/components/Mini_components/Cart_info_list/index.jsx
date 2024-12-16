@@ -1,13 +1,13 @@
 
 import { Typography, Table, InputNumber, notification, Button, Divider, Input, Row, Col } from "antd";
 import { CloseCircleOutlined } from "@ant-design/icons";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-
+import { DataContexts } from "../../../AppContexts/Contexts";
 const { Text } = Typography;
 
 const CartInfoList = () => {
+    const {fetchCartUser} = useContext(DataContexts)
     const [cartData, setCartData] = useState([]);
     const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
@@ -30,6 +30,7 @@ const CartInfoList = () => {
                 name: item.productId.name,
                 price: Number(item.productId.price),
                 quantity: Number(item.quantity),
+                discount: Number(item.productId.discount),
                 image: item.productId.mainImage,
                 size: item.size
             }));
@@ -81,7 +82,7 @@ const CartInfoList = () => {
             const res = await response.json();
 
             if (res.success == true) {
-                navigate('/payment');
+                navigate('/thanh-toan');
             } else {
                 console.error('Failed to update cart:', res.statusText);
                 notification.error({
@@ -131,6 +132,7 @@ const CartInfoList = () => {
                         description: 'Sản phẩm đã được xóa khỏi giỏ hàng.',
                         showProgress: true,
                     });
+                    fetchCartUser(userId)
                     return updatedData;
                 });
             } else {
@@ -215,6 +217,7 @@ const CartInfoList = () => {
             dataIndex: "price",
             key: "total",
             render: (text, record) => (
+                
                 <Text style={{ display: 'block', textAlign: "center", fontWeight: 500, fontSize: 16 }}>
                     {(record.price * record.quantity).toLocaleString()}đ
                 </Text>
@@ -222,7 +225,14 @@ const CartInfoList = () => {
         },
     ];
 
-    const totalPrice = cartData.reduce((total, item) => total + item.price * item.quantity, 0);
+    const totalPrice = cartData.reduce((total, item) =>
+        { 
+                return total + ((Number(item.price)*(1-Number(item.discount)/100)) * Number(item.quantity));
+
+
+        }
+        ,0
+    )
     const totalQuantity = cartData.reduce((total, item) => total + item.quantity, 0)
 
     return (

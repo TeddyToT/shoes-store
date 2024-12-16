@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import QuantitySelection from "../../components/QuantitySelection";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import RecommentItem from "../../components/RecommentItem/RecommentItem";
@@ -27,6 +27,7 @@ const ItemDetails = () => {
   const [price, setPrice] = useState(0);
   const [selectedSize, setSelectedSize] = useState({});
 
+
   const navigate = useNavigate()
   useEffect(() => {
     axios
@@ -50,6 +51,20 @@ const ItemDetails = () => {
   }, [productId]);
 
   const handleAddCartClick = () => {
+    if(!userId)
+    {
+      toast.warn('Yêu cầu đăng nhập thể thêm vào giỏ hàng', {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
 
     axios.post("http://localhost/be-shopbangiay/api/cart.php", {
       userId: userId.toString(),
@@ -96,17 +111,33 @@ const ItemDetails = () => {
   }
 
   const handleOrderClick = async () => {
-    const items = [{
-      productId: productId.toString(),
+    if(!userId)
+      {
+        toast.warn('Yêu cầu đăng nhập mua ngay sản phẩm', {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
+
+    const payload = [{
+      productId: productId,
+      name: productName,
+      price: Number(price),
       quantity: Number(quantity),
+      discount: Number(discount),
       size: selectedSize.size.toString(),
+      image: images[0]
+      
     }]
 
-    const payload = {
-      userId: userId,
-      items: items
-    };
-    navigate('/mua-ngay', { state: payload });
+    navigate('/thanh-toan', { state: payload });
 
   };
 
@@ -153,12 +184,14 @@ const ItemDetails = () => {
   };
 
 
-  const refProducts = products.filter(
-    (product) =>
-      product.manufacturerId.name === brandName.name ||
-      product.categoryId.name === categoryName.name
-  );
-
+  const refProducts = useMemo(() => {
+    return products.filter(
+      (product) =>
+        product.manufacturerId.name === brandName.name ||
+        product.categoryId.name === categoryName.name
+    );
+  }, [products, brandName.name, categoryName.name]);
+  
   const shuffle = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -166,24 +199,26 @@ const ItemDetails = () => {
     }
     return array;
   };
-
-  const recProducts = shuffle(refProducts).slice(0, 10);
+  
+  const recProducts = useMemo(() => {
+    return shuffle(refProducts).slice(0, 10);
+  }, [refProducts]);
 
   return (
     <>
       <Breadcrumb items={items} />
       <div className="w-11/12 h-auto flex flex-col py-5 mb-20  items-center place-self-center">
 
-        <div className="w-11/12 px-24 flex ">
-          <div className="w-full flex flex-row justify-between gap-0">
-            <div className="flex flex-row max-h-[500px] gap-1">
-              <div className="flex flex-col gap-1 basis-1/4">
+        <div className="w-full px-5 flex ">
+          <div className="w-full flex flex-col md:flex-row justify-between gap-2">
+            <div className="w-full md:w-2/3 lg:w-7/12 flex flex-row  gap-1">
+              <div className="flex flex-col basis-1/4">
                 {images.map((image, index) => (
                   <img
                     key={index}
                     src={image}
                     alt=""
-                    className={`rounded-lg hover:scale-105 hover:brightness-105 w-full h-[121px] object-cover cursor-pointer ${activeImg === image ? "opacity-100" : "opacity-20"
+                    className={`rounded-lg hover:scale-105 hover:brightness-105 w-full xl:h-[15vh] lg:h-[12vh] h-[10vh] object-cover cursor-pointer ${activeImg === image ? "opacity-100" : "opacity-20"
                       }`}
                     onMouseOver={() => {
                       if (isHoverEnabled) setActiveImage(image);
@@ -200,15 +235,15 @@ const ItemDetails = () => {
                 <img
                   src={activeImg}
                   alt="mainImage"
-                  className="w-[500px] h-[500px] object-cover border-b-2 rounded-lg"
+                  className="w-full xl:h-[60vh] lg:h-[48vh] md:h-[40vh] h-[40vh] object-cover border-b-2 rounded-lg"
                 />
               </div>
             </div>
 
-            <div className="basis-5/12 ">
+            <div className="w-full md:w-1/3 lg:w-5/12 ">
               <div className="w-full pb-5 mb-5 border-b-2 border-gray-500">
-                <p className="text-4xl font-bold mt-2 mb-1">{productName}</p>
-                <p className="pt-5 text-lg font-bold flex flex-row items-center">
+                <p className="w-[120%] lg:text-4xl text-2xl md:text-xl font-bold mt-2 mb-1">{productName}</p>
+                <p className="pt-5 text-base font-bold flex flex-row items-center">
                   Hãng giày:
                   <div className="group ml-1 hover:bg-slate-700  px-2 py-1 rounded-lg">
                     <Link
@@ -218,9 +253,9 @@ const ItemDetails = () => {
                     </Link>
                   </div>
                 </p>
-                <p className="text-lg font-bold flex flex-row items-center">
+                <p className="text-base font-bold flex flex-row items-center">
                   Thể loại giày:
-                  <div className=" flex flex-row group ml-1 hover:bg-slate-700  px-2 py-1 rounded-lg">
+                  <div className=" flex flex-row group ml-1 hover:bg-slate-700  py-1 rounded-lg">
                     <Link
                       to={`/san-pham?categories=${categoryName.categoryId}`}
                       className="font-bold text-sky-600 group-hover:text-white">
@@ -232,12 +267,12 @@ const ItemDetails = () => {
               <div className="w-full border-b-2 border-gray-500 mb-5 pb-5">
 
                 {discount != 0 ? (
-                  <div className="w-full flex flex-row items-end gap-3">
-                    <p className="font-bold text-4xl">
+                  <div className="w-full flex flex-row items-start gap-3 lg:text-4xl md:text-xl text-2xl">
+                    <p className="font-bold ">
                       {formatNumber(price - (price * discount) / 100)}đ
                     </p>
 
-                    <p className="text-4xl font-medium text-gray-500 line-through">
+                    <p className=" font-medium text-gray-500 line-through">
                       {formatNumber(price)}đ
                     </p>
                   </div>
@@ -253,21 +288,21 @@ const ItemDetails = () => {
 
 
               </div>
-              <div className="w-full">
+              <div className="lg:flex-col  w-full">
                 <p className="text-lg font-bold text-left my-2">
                   Mô tả sản phẩm:{" "}
                 </p>
                 <p className=" text-left whitespace-pre-wrap break-words">
-                  {expandText ? des : des.slice(0, 150) + "..."}
+                  {expandText ? des : des.slice(0, 100) + "..."}
                 </p>
                 <p
-                  className="italic text-gray-600 hover:text-cyan-800 hover:font-bold hover:cursor-pointer"
+                  className="italic text-lg text-gray-600 font-bold my-2 hover:text-blue-600 hover:cursor-pointer"
                   onClick={handleExpandButton}
                 >
                   {expandText ? "Thu gọn" : "Xem thêm"}{" "}
                 </p>
               </div>
-              <p className="font-bold text-lg">Chọn Size</p>
+              <p className="font-bold lg:text-lg">Chọn Size</p>
               <SizeSelect
                 sizes={sizes}
                 selectedSize={selectedSize}
@@ -281,16 +316,15 @@ const ItemDetails = () => {
                 />
               </div>
               <div className="flex flex-row mt-5 gap-3">
-                <button className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none ">
-                  <p
-                    onClick={handleOrderClick}
+                <button onClick={handleOrderClick} className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none ">
+                  <p 
+                 
                     className="text-lg w-full text-black group-hover:text-white font-bold "
                   >
                     Mua ngay
                   </p>
                 </button>
-                <button
-                  onClick={handleAddCartClick}
+                <button onClick={handleAddCartClick}
                   className="group overflow-hidden w-1/3 h-[60px] flex items-center justify-start  border hover:bg-slate-700 border-[#3e3e3e] rounded-xl cursor-pointer group hover:border-none "
                 >
                   <p className="text-lg w-full text-black group-hover:text-white font-bold">

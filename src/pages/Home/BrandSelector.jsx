@@ -6,7 +6,7 @@ const BrandSelector = () => {
   const { products, manufacturers } = useContext(DataContexts); 
   const [selectedBrand, setSelectedBrand] = useState(null); 
   const [filteredProducts, setFilteredProducts] = useState([]); 
-
+  
   useEffect(() => {
     if (selectedBrand) {
       const filtered = products.filter(
@@ -28,12 +28,12 @@ const BrandSelector = () => {
   return (
     <div className="p-5">
       
-      <div className="flex space-x-4 mb-5 w-3/4 place-self-center justify-around  ">
+      <div className="flex gap-2 mb-5 md:w-3/4 w-full  place-self-center justify-around text-center">
         {manufacturers.map((brand) => (
           <button
             key={brand.manufacturerId}
             onClick={() => setSelectedBrand(brand)}
-            className={`py-6 rounded-lg capitalize w-1/5 text-xl font-semibold   ${
+            className={` text-center sm:py-3 rounded-lg capitalize w-1/5 text-base sm:text-xl font-semibold   ${
               selectedBrand?.manufacturerId === brand.manufacturerId
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-600"

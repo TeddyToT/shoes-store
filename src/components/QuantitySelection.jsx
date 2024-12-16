@@ -17,7 +17,7 @@ const QuantitySelection = ({ quantity, updateQuantity, limit }) => {
     return (
         <div className="w-full">
             <div className="w-full flex flex-row items-center gap-3">
-                <p className="font-bold text-base">Số lượng: </p>
+                <p className="font-bold text-base md:text-sm md:font-medium lg:font-bold">Số lượng: </p>
                 <div className="flex flex-row items-center">
                     <div className="border border-[#3e3e3e] rounded-full p-1 cursor-pointer " onClick={MinusQuantity}>
                         <svg className="flex-shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -32,7 +32,7 @@ const QuantitySelection = ({ quantity, updateQuantity, limit }) => {
                         </svg>
                     </div>
                 </div>
-                <p>(Còn <span className=" font-medium">{limit}</span> sản phẩm)</p>
+                <p className="font-bold text-base lg:font-bold lg:text-bold md:text-sm md:font-medium ">(Còn <span className=" font-medium">{limit}</span> sản phẩm)</p>
             </div>
             {isLimit && (
                 <p className="italic font-medium text-[#fc0307]">Số lượng đạt giới hạn sản phẩm có sẵn</p>

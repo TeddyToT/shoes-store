@@ -2,21 +2,23 @@ import React from 'react';
 import { Menu } from 'antd';
 import { UserOutlined, ShoppingCartOutlined, HistoryOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useContext } from 'react';
 
 function UserOptionMenu() {
+    
     const navigate = useNavigate();
     const location = useLocation();
 
 
     const getSelectedKey = () => {
         switch (location.pathname) {
-            case '/account':
+            case '/tai-khoan':
                 return '1';
-            case '/ordertracking':
+            case '/tai-khoan/theo-doi-don-hang':
                 return '2';
-            case '/order-management':
+            case '/tai-khoan/lich-su-don-hang':
                 return '3';
-            case '/logout':
+            case '/':
                 return '4';
             default:
                 return '1';
@@ -26,16 +28,16 @@ function UserOptionMenu() {
     const handleMenuClick = (key) => {
         switch (key) {
             case '1':
-                navigate('/account'); // Chuyển đến trang thông tin tài khoản
+                navigate('/tai-khoan'); // Chuyển đến trang thông tin tài khoản
                 break;
             case '2':
-                navigate('/ordertracking'); // Chuyển đến trang theo dõi đơn hàng
+                navigate('/tai-khoan/theo-doi-don-hang'); // Chuyển đến trang theo dõi đơn hàng
                 break;
             case '3':
-                navigate('/order-management'); // Chuyển đến trang lịch sử đơn hàng
+                navigate('/tai-khoan/lich-su-don-hang'); // Chuyển đến trang lịch sử đơn hàng
                 break;
             case '4':
-                navigate('/dang-nhap'); // Chuyển đến trang đăng xuất
+                navigate('/'); // Chuyển đến trang đăng xuất
                 break;
             default:
                 break;

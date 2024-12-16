@@ -2,7 +2,7 @@ import React from "react";
 
 const SizeSelect = ({ sizes, selectedSize, updateSelectedSize }) => {
   return (
-    <div className="flex gap-3 mt-3">
+    <div className="lg:flex grid md:grid-cols-3 grid-cols-3   gap-3 mt-3">
       {sizes.map((item, index) => (
         <button
           key={index}

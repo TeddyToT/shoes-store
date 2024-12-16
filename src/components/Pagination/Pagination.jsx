@@ -43,7 +43,7 @@ const Paginate = ({ currentPage, totalPages, onPageChange }) => {
                 disabled={currentPage === 1}
                 className={`px-3 py-1 rounded-md ${currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}
             >
-                Previous
+                Trước
             </button>
             {getPageNumbers().map((page, index) => (
                 <button
@@ -62,7 +62,7 @@ const Paginate = ({ currentPage, totalPages, onPageChange }) => {
                 disabled={currentPage === totalPages}
                 className={`px-3 py-1 rounded-md ${currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}
             >
-                Next
+                Tiếp
             </button>
         </div>
     );

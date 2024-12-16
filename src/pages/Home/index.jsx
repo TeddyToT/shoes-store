@@ -20,8 +20,14 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="py-5 px-8">
+    <div className="w-full">
+      <div className="py-5 w-11/12 place-self-center">
+      <div className="w-2/3">
       <Breadcrumb />
+      </div>
+      
+      </div>
+     
 
       <div className=" w-full mt-5 mb-10 rounded-sm border border-stroke shadow-default place-self-center ">
         <div className="w-full flex place-self-center place-items-center place-content-center justify-items-center items-center">
@@ -41,7 +47,7 @@ const Home = () => {
             {banners.map((banner, index) => {
               return (
                 <SwiperSlide key={index}>
-                  <img src={banner.link} className="w-full h-[600px]" />
+                  <img src={banner.link} className="w-full md:h-[80vh] h-[50vh]" />
                 </SwiperSlide>
               );
             })}
@@ -49,12 +55,12 @@ const Home = () => {
         </div>
       </div>
       <div className="w-11/12 flex flex-col place-self-center place-content-center">
-      <div className="flex flex-row w-3/4 justify-around place-self-center place-content-center gap-4">
+      <div className="flex flex-col sm:flex-row lg:w-3/4 w-full h-fit justify-around items-center place-self-center place-content-center md:gap-4 gap-1">
         
         <InfoBox
         icon={TbTruckDelivery} 
-        title="Vận chuyển TOÀN QUỐC"
-        content="Thanh toán khi nhận hàng"
+        title="Vận chuyển toàn quốc"
+        content="Nhận hàng mọi nơi"
       />
       <InfoBox
         icon={FiCheckCircle}
@@ -63,7 +69,7 @@ const Home = () => {
       />
       <InfoBox
         icon={MdOutlineAutorenew}
-        title="Đổi sản phẩm mới"
+        title="Đổi trả sản phẩm"
         content="Nếu sản phẩm lỗi"
       />
        <InfoBox

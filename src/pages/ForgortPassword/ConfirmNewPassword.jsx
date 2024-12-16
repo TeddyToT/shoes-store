@@ -11,6 +11,7 @@ const ConfirmNewPassword = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [code, setCode] = useState("")
+  
   const [email, setEmail] = useState("")
   const navigate = useNavigate();
   const togglePasswordVisibility = () => {
@@ -132,7 +133,7 @@ const ConfirmNewPassword = () => {
   const items = [
     { name: 'Trang chủ', href: '/' },
     { name: 'Đăng nhập', href: '/dang-nhap' },
-    { name: 'Lấy lại mật khẩu', href: '/dang-nhap/quen-mat-khau' },
+    { name: 'Quên mật khẩu', href: '/dang-nhap/quen-mat-khau' },
     { name: 'Xác nhận đổi mật khẩu' }
 
   ]
@@ -148,10 +149,6 @@ const ConfirmNewPassword = () => {
                 <img className="" src={logo} alt="Logo" width={400} />
               </Link>
 
-              <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
-              </p>
 
             </div>
           </div>
@@ -187,7 +184,6 @@ const ConfirmNewPassword = () => {
                     Mã xác nhận
                   </label>
                   <div className="relative">
-                    {/* <CiUser size={40} /> */}
                     <input
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
