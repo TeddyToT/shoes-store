@@ -2,9 +2,7 @@ import  { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
-import { CiUser, CiLock, CiMail } from "react-icons/ci";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { Layout } from "antd";
+
 import axios from "axios";
 import { toast } from "react-toastify";
 const ForgotPassowrd = () => {
@@ -101,11 +99,6 @@ const items=[
               <Link className="mb-5.5 inline-block" href="/">
                 <img className="" src={logo} alt="Logo" width={400} />
               </Link>
-
-              <p className="2xl:px-20">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                suspendisse.
-              </p>
 
             </div>
           </div>

@@ -12,10 +12,8 @@ import { toast } from "react-toastify";
 const ItemDetails = () => {
   const { slugId } = useParams();
   const { products, fetchCartUser } = useContext(DataContexts)
-  const { products, fetchCartUser } = useContext(DataContexts)
   const lastDashIndex = slugId.lastIndexOf("-");
   const productId = slugId.slice(lastDashIndex + 1);
-  const userId = localStorage.getItem('id');
   const userId = localStorage.getItem('id');
   const [items, setItems] = useState([])
 
@@ -31,7 +29,6 @@ const ItemDetails = () => {
   const [price, setPrice] = useState(0);
   const [selectedSize, setSelectedSize] = useState({});
 
-  const navigate = useNavigate()
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -107,8 +104,10 @@ const ItemDetails = () => {
       name: productName,
       price: Number(price),
       quantity: Number(quantity),
+      discount: Number(discount),
       size: selectedSize.size.toString(),
       image: images[0]
+      
     }]
 
     navigate('/payment', { state: payload });
@@ -240,7 +239,6 @@ const ItemDetails = () => {
                   <div className="w-full flex flex-row items-end gap-3">
                     <p className="font-bold text-4xl">
                       {formatNumber(price - (price * discount) / 100)}đ
-                      {formatNumber(price - (price * discount) / 100)}đ
                     </p>
 
                     <p className="text-4xl font-medium text-gray-500 line-through">
@@ -250,7 +248,6 @@ const ItemDetails = () => {
                 ) : (
                   <div className="w-full flex flex-row items-end gap-3">
                     <p className="font-bold text-4xl">
-                      {formatNumber(price)}đ
                       {formatNumber(price)}đ
                     </p>
 
