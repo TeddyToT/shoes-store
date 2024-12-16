@@ -21,7 +21,7 @@ const WebCard = () => {
                     </div>
                     <div className="h-[40px] lg:h-[50px] flex flex-col justify-between">
                         <p className="text-[15px] font-medium text-white">Email</p>
-                        <p className="text-[16px] font-bold text-[#1677ff]">shoestore.contact@gmail.com</p>
+                        <p className="text-[16px] font-bold text-[#1677ff]">{shop.email}</p>
                     </div>
                 </div>
                 <div className="w-full flex flex-row items-center gap-2 sm:gap-3">
@@ -30,7 +30,7 @@ const WebCard = () => {
                     </div>
                     <div className="h-[40px] lg:h-[50px] flex flex-col justify-between">
                         <p className="text-[15px] font-medium text-white">Số điện thoại</p>
-                        <p className="text-[16px] font-bold text-[#1677ff]">012345689</p>
+                        <p className="text-[16px] font-bold text-[#1677ff]">{shop.phone}</p>
                     </div>
                 </div>
                 <div className="w-full flex flex-col items-center gap-1">
@@ -40,7 +40,7 @@ const WebCard = () => {
                         </div>
                         <div className="h-[40px] lg:h-[50px] flex flex-col justify-between">
                             <p className="text-[15px] font-medium text-white">Địa chỉ</p>
-                            <p className="text-[16px] font-bold text-[#1677ff]">Trường Đại học Công Nghệ Thông Tin</p>
+                            <p className="text-[16px] font-bold text-[#1677ff]">{shop.address}</p>
                         </div>
                     </div>
                     <div className="w-full flex flex-row items-center gap-3">

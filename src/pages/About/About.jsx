@@ -7,7 +7,7 @@ import logo from "../../assets/images/logo.png";
 import BubblesBG from "../../components/Bubbles/Bubbles";
 
 const Introduce = () => {
-    const {users, products, manufacturers}  = useContext(DataContexts)
+    const {users, products, manufacturers, shop}  = useContext(DataContexts)
   return (
     <div className="w-full h-auto flex flex-col items-center gap-[150px] py-5 pb-20 overflow-hidden mb-20">
       <div className="w-11/12">
@@ -68,7 +68,7 @@ const Introduce = () => {
               </div>
             </div>
             <img
-              src={logo}
+              src={shop.logo}
               className="w-full lg:w-5/12 rounded-xl shadow-2xl"
             />
           </div>
@@ -93,7 +93,7 @@ const Introduce = () => {
               </p>
             </div>
             <img
-              src={logo}
+              src={shop.logo}
               className="w-full lg:w-5/12  rounded-xl shadow-2xl"
             />
           </div>
@@ -104,39 +104,39 @@ const Introduce = () => {
         <div className="w-11/12 md:w-4/5 bg-white z-20 flex flex-col items-center md:gap-10 border-2 border-[#3e3e3e] rounded-xl shadow-2xl py-10">
           <div className="w-full flex flex-col md:flex-row items-center justify-center gap-3">
             <p className="text-5xl font-black text-[#1677ff]">Vì sao chọn</p>
-            <img src={logo} className="w-[200px]" />
+            <img src={shop.logo} className="w-[200px]" />
           </div>
           <div className="w-11/12 md:w-4/5 mt-10">
             <QuestionBox
-              icon={logo}
+              icon={shop.logo}
               tilte={"Sản phẩm chất lượng hàng đầu"}
               context={
                 "luôn chú trọng vào việc tuyển chọn kỹ lưỡng các nhà cung cấp uy tín, với quy trình sản xuất đạt chuẩn, đảm bảo chất lượng và độ bền vượt trội. Mỗi đôi giày đến tay khách hàng đều trải qua quá trình kiểm tra nghiêm ngặt, cam kết mang lại sự thoải mái và an toàn cho người sử dụng"
               }
             />
             <QuestionBox
-              icon={logo}
+              icon={shop.logo}
               tilte={"Nguồn gốc xuất xứ rõ ràng"}
               context={
                 "minh bạch trong mọi hoạt động, cam kết cung cấp đầy đủ thông tin về nguồn gốc xuất xứ của từng sản phẩm. Khách hàng có thể dễ dàng truy xuất nguồn gốc sản phẩm thông qua hệ thống tem truy xuất điện tử được gắn trên mỗi sản phẩm."
               }
             />
             <QuestionBox
-              icon={logo}
+              icon={shop.logo}
               tilte={"Giá cả hợp lý"}
               context={
                 "luôn nỗ lực để mang đến cho khách hàng những sản phẩm chất lượng cao với mức giá hợp lý nhất. Chúng tôi hiểu rằng giá cả là một yếu tố quan trọng ảnh hưởng đến quyết định mua sắm của khách hàng, vì vậy Shoes Store luôn cân nhắc kỹ lưỡng để đưa ra mức giá phù hợp với mọi đối tượng khách hàng."
               }
             />
             <QuestionBox
-              icon={logo}
+              icon={shop.logo}
               tilte={"Dịch vụ chuyên nghiệp, tận tâm"}
               context={
                 "đặt lợi ích của khách hàng lên hàng đầu, luôn sẵn sàng hỗ trợ khách hàng tận tình, chu đáo. Đội ngũ nhân viên chuyên nghiệp, am hiểu sản phẩm sẽ luôn tư vấn và giải đáp mọi thắc mắc của khách hàng một cách nhanh chóng và hiệu quả."
               }
             />
             <QuestionBox
-              icon={logo}
+              icon={shop.logo}
               tilte={"Giao hàng nhanh chóng, tiện lợi"}
               context={
                 " hợp tác với các nhà cung cấp dịch vụ vận chuyển uy tín để đảm bảo giao hàng nhanh chóng, đúng hẹn đến tay khách hàng. Chúng tôi cung cấp đa dạng các hình thức thanh toán để khách hàng có thể lựa chọn phương thức phù hợp nhất với nhu cầu của mình."
@@ -144,11 +144,7 @@ const Introduce = () => {
             />
           </div>
         </div>
-        {/* <img
-                    src={logo}
-                    className="absolute w-full h-screen z-10"
-                /> */}
-        {/* <BubblesBG /> */}
+
       </div>
     </div>
   );
