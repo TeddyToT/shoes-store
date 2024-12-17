@@ -8,12 +8,14 @@ import { AppProvider } from './AppContexts/Contexts';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import RollToTopButton from './components/ScrollToTop/ScrollToTop';
+import ScrollToTop from './components/ScrollToTop/AutoTop';
 function App() {
 
 
   return (
     <>
       <BrowserRouter>
+      <ScrollToTop/>
       <RollToTopButton/>
       <ToastContainer/>
       <AppProvider>
