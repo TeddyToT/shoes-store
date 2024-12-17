@@ -7,7 +7,7 @@ import { DataContexts } from "../../../AppContexts/Contexts";
 const { Text } = Typography;
 
 const CartInfoList = () => {
-    const {fetchCartUser} = useContext(DataContexts)
+    const { fetchCartUser } = useContext(DataContexts)
     const [cartData, setCartData] = useState([]);
     const userId = localStorage.getItem('id'); // Lấy id từ localStorage
 
@@ -217,7 +217,7 @@ const CartInfoList = () => {
             dataIndex: "price",
             key: "total",
             render: (text, record) => (
-                
+
                 <Text style={{ display: 'block', textAlign: "center", fontWeight: 500, fontSize: 16 }}>
                     {(record.price * record.quantity).toLocaleString()}đ
                 </Text>
@@ -225,13 +225,12 @@ const CartInfoList = () => {
         },
     ];
 
-    const totalPrice = cartData.reduce((total, item) =>
-        { 
-                return total + ((Number(item.price)*(1-Number(item.discount)/100)) * Number(item.quantity));
+    const totalPrice = cartData.reduce((total, item) => {
+        return total + ((Number(item.price) * (1 - Number(item.discount) / 100)) * Number(item.quantity));
 
 
-        }
-        ,0
+    }
+        , 0
     )
     const totalQuantity = cartData.reduce((total, item) => total + item.quantity, 0)
 
