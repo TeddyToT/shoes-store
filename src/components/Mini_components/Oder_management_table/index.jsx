@@ -18,27 +18,43 @@ function OrderManagementTable() {
         try {
             const response = await fetch(`http://localhost/be-shopbangiay/api/invoice.php?userId=${userId}`);
             const data = await response.json();
-
+    
             const transformedData = data.map((order) => {
                 const total = order.items.reduce((sum, item) => {
-                    return sum + (Number(item.productId.price) * Number(item.quantity));
+                    const price = Number(item.productId.price);
+                    const discount = Number(item.productId.discount) / 100;
+                    const quantity = Number(item.quantity);
+    
+                    
+                    const finalPrice = discount > 0 ? price - (price * discount) : price;
+    
+                    // Cộng dồn vào tổng tiền
+                    return sum + (finalPrice * quantity);
                 }, 0);
-
+    
                 return {
                     key: order.invoiceId,
                     order_id: `#${order.invoiceId}`,
                     order_date: new Date(order.orderDate).toLocaleDateString('vi-VN'),
                     total: `${total.toLocaleString('vi-VN')}đ`,
-                    state: order.state === 'Done' ? 'Hoàn thành' : 'Đang xử lý',
+                    state: order.state === 'Pending' ? 'Chờ xác nhận' :
+                        order.state === 'Confirming' ? 'Đã xác nhận' :
+                        order.state === 'Shipping' ? 'Đang giao' :
+                        order.state === 'Done' ? 'Hoàn thành' : 'Đã hủy',
                     details: order,
                 };
             });
-
+    
+            
+            transformedData.sort((a, b) => new Date(b.details.orderDate) - new Date(a.details.orderDate));
+    
+            
             setDataSource(transformedData);
         } catch (error) {
             console.error('Error fetching orders:', error);
         }
     };
+    
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -113,7 +129,10 @@ function OrderManagementTable() {
                             fontWeight: 'bold',
                         }}
                     >
-                        {selectedOrder?.state === 'Done' ? 'Hoàn thành' : 'Đang xử lý'}
+                        {selectedOrder?.state  === 'Pending' ? 'Chờ xác nhận' :
+                    selectedOrder?.state === 'Confirming' ? 'Đã xác nhận' : 
+                    selectedOrder?.state === 'Shipping' ? 'Đang giao' : 
+                    selectedOrder?.state === 'Done' ? 'Hoàn thành' : 'Đã hủy'}
                     </Tag>
                 </div>
                 {selectedOrder?.items.map((item, index) => (

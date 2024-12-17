@@ -36,11 +36,12 @@ function ContentOderTracking() {
             const data = await response.json();
 
             const filteredOrders = data.filter(order =>
-                order.state === 'Pending');
+                order.state === 'Pending' || order.state === 'Shipping'|| order.state === 'Confirming');
 
             const transformedStatus = filteredOrders.map((order) => {
-                order.state = order.state === 'Done' ? 'Đã giao' :
-                    order.state === 'Pending' ? 'Đang giao' : order.state;
+                order.state = order.state === 'Pending' ? 'Chờ xác nhận' :
+                order.state = order.state === 'Confirming' ? 'Đã xác nhận' :
+                    order.state === 'Shipping' ? 'Đang giao' : order.state;
                 return order;
             })
             transformedStatus.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));

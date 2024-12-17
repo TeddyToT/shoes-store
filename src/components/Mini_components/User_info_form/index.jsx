@@ -46,6 +46,7 @@ function UserInfoForm() {
         formData.append('userId', userId)
         formData.append('name', values.name)
         formData.append('phone', values.sdt)
+        formData.append('email', values.email)
         formData.append('birthday', values.birthday ? values.birthday.format('DD/MM/YYYY') : "")
         formData.append('avatar', userData?.avatar || '')
         formData.append('role', userData?.role || '')

@@ -83,7 +83,7 @@ function ContentOderManagement() {
                             textAlign: 'center'
                         }}>
                             Lịch sử mua hàng
-                            <Search
+                            {/* <Search
                                 size='large'
                                 placeholder="Nhập thông tin đơn hàng..."
                                 style={{
@@ -94,7 +94,7 @@ function ContentOderManagement() {
                                 }}
                                 onSearch={onSearch}
                                 enterButton
-                            />
+                            /> */}
                         </div>
 
                         <div className='oder__management__history__table' style={{
