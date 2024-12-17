@@ -74,7 +74,7 @@ function ContentOderTracking() {
     };
 
     const OrderDetail = ({ order }) => (
-        <div className='oder__tracking__info' style={{
+        <div className='oder__tracking__info shadow-xl' style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -116,10 +116,10 @@ function ContentOderTracking() {
                 }}>
                     <h3 style={{ margin: '10px 0 5px', fontWeight: 'bold' }}>Thông tin đặt hàng</h3>
                     <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                        <span>Họ tên:</span> <span>{userData.name}</span>
+                        <span>Người nhận:</span> <span>{order.name}</span>
                     </p>
                     <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
-                        <span>Số điện thoại:</span> <span>{userData.phone}</span>
+                        <span>Số điện thoại:</span> <span>{order.phone}</span>
                     </p>
                     <p style={{ margin: '5px 0', display: 'flex', justifyContent: 'space-between' }}>
                         <span>Địa chỉ:</span> <span>{order.address}</span>

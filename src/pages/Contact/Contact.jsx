@@ -26,6 +26,11 @@ const Contact = () => {
         });
     }
     const sendEmail = () => {
+        if (!userId){
+            notifyError("Yêu cầu đăng nhập để liên hệ")
+            return
+        }
+
         if (!name){
             notifyError("Vui lòng nhập tên")
             return

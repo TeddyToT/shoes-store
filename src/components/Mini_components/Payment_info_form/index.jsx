@@ -40,7 +40,7 @@ function PaymentInfoForm() {
             const data = await response.json();
 
             form.setFieldsValue({
-                name: data.name,
+                name: data.name.toString(),
                 email: data.email,
                 sdt: data.phone,
                 address: data.address
@@ -49,11 +49,7 @@ function PaymentInfoForm() {
             setUserData(data);
         } catch (error) {
             console.error('Error fetching user data:', error);
-            notification.error({
-                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                description: 'Không thể tải thông tin người dùng!',
-                showProgress: true,
-            });
+
         }
     };
 
@@ -113,6 +109,7 @@ function PaymentInfoForm() {
 
         };
         console.log("Dữ liệu gửi đi: ", orderData);
+        
         if (orderData.paymentMethod == 'Cod') {
 
             try {
@@ -135,28 +132,35 @@ function PaymentInfoForm() {
                     const user = {
                         userId: userId
                     }
-                    try {
-                        const response = await fetch('http://localhost/be-shopbangiay/api/cart.php', {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(user)
-                        });
-
-                        const res = await response.json();
-                        if (res.success == true) {
-                            console.log('Giỏ hàng đã được xóa thành công');
-                            navigate('/tai-khoan/theo-doi-don-hang');
-
-                        } else {
-                            console.error('Không thể xóa giỏ hàng:', res.message);
+                    if(!item)
+                    {
+                        try {
+                            const response = await fetch('http://localhost/be-shopbangiay/api/cart.php', {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(user)
+                            });
+    
+                            const res = await response.json();
+                            if (res.success == true) {
+                                console.log('Giỏ hàng đã được xóa thành công');
+                                navigate('/tai-khoan/theo-doi-don-hang');
+    
+                            } else {
+                                console.error('Không thể xóa giỏ hàng:', res.message);
+                            }
+    
+                        } catch (error) {
+                            console.error('Lỗi xóa cart sau thanh toán', error)
                         }
-
-                    } catch (error) {
-                        console.error('Lỗi xóa cart sau thanh toán', error)
+                        console.log('userData', user)
                     }
-                    console.log('userData', user)
+                    else{
+                        navigate('/tai-khoan/theo-doi-don-hang');
+                    }
+
 
 
                 } else {
@@ -180,7 +184,7 @@ function PaymentInfoForm() {
             axios.post('http://localhost/be-shopbangiay/api/payment.php', {
 
                 userId: orderData.userId,
-                name: orderData.name,
+                name: orderData.name.toString(),
                 phone: orderData.phone,
                 address: orderData.phone,
                 note: orderData.note,
@@ -225,7 +229,7 @@ function PaymentInfoForm() {
                             paymentMethod: "Momo",
                             address: data.address,
                             note: data.note,
-                            name: data.name,
+                            name: data.name.replace(/\+/g, ' '),
                             phone: data.phone,
                         });
 
@@ -239,27 +243,32 @@ function PaymentInfoForm() {
                             const user = {
                                 userId: userId
                             }
-                            try {
-                                const response = await fetch('http://localhost/be-shopbangiay/api/cart.php', {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify(user)
-                                });
-
-                                const res = await response.json();
-                                if (res.success == true) {
-                                    console.log('Giỏ hàng đã được xóa thành công');
-                                    navigate('/tai-khoan/theo-doi-don-hang');
-
-                                } else {
-                                    console.error('Không thể xóa giỏ hàng:', res.message);
+                            if((data.items).length > 1)
+                            {
+                                try {
+                                    const response = await fetch('http://localhost/be-shopbangiay/api/cart.php', {
+                                        method: 'DELETE',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify(user)
+                                    });
+    
+                                    const res = await response.json();
+                                    if (res.success == true) {
+                                        console.log('Giỏ hàng đã được xóa thành công');
+                                        navigate('/tai-khoan/theo-doi-don-hang');
+    
+                                    } else {
+                                        console.error('Không thể xóa giỏ hàng:', res.message);
+                                    }
+    
+                                } catch (error) {
+                                    console.error('Lỗi xóa cart sau thanh toán', error)
                                 }
-
-                            } catch (error) {
-                                console.error('Lỗi xóa cart sau thanh toán', error)
                             }
+                            navigate('/tai-khoan/theo-doi-don-hang');
+                            
 
                         }
 
@@ -416,7 +425,13 @@ function PaymentInfoForm() {
                                     Số lượng: {item.quantity} | Size: {item.size}
                                 </p>
                             </div>
-                            <p style={{ fontWeight: '500' }}>{(item.price * item.quantity).toLocaleString()}đ </p>
+                            {item.discount != 0?(
+                            <p style={{ fontWeight: '500' }}>{((item.price*(1-item.discount/100)) * item.quantity).toLocaleString()}đ </p>
+
+                            ):(
+                                <p style={{ fontWeight: '500' }}>{(item.price * item.quantity).toLocaleString()}đ </p>
+
+                            )}
                         </div>
                     ))}
 

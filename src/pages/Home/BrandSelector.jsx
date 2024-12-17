@@ -52,9 +52,13 @@ const BrandSelector = () => {
       ) : (
         <p className="text-gray-600">Không có sản phẩm nào cho hãng này.</p>
       )}
-      <div className="w-full text-right mt-4">
-      <Link className="text-white hover:text-blue-500 hover:bg-slate-500 text-lg italic bg-[#3e3e3e] py-3 px-3 rounded-xl">Xem thêm</Link>
-      </div>
+      {selectedBrand?(<div className="w-full text-right mt-8">
+      <Link to={`/san-pham?brand=${selectedBrand.name}`} className="text-white hover:text-red-500  text-base font-bold bg-[#3e3e3e] hover:bg-black py-3 px-3 rounded-xl">Xem thêm</Link>
+      </div>):(
+        <div>
+          </div>
+      )}
+      
        
     </div>
   );

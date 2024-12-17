@@ -43,7 +43,7 @@ const WebCard = () => {
                             <p className="text-[16px] font-bold text-[#1677ff]">{shop.address}</p>
                         </div>
                     </div>
-                    <div className="w-full flex flex-row items-center gap-3">
+                    <div className="w-full flex flex-row items-center gap-3 mt-3">
                         <div className="w-[50px]"></div>
                         <a href="https://maps.app.goo.gl/TNkRmH6uTDPtwyL6A" target="_blank"
                             className="text-sm text-white hover:underline italic"

@@ -48,12 +48,12 @@ function Footer() {
                     <ul className="list-none p-0">
                         {manufacturers.map((manufacturer, index) => (
                             <li key={index} className="mb-2">
-                                <a
-                                    href="/"
+                                <Link
+                                    to={`/san-pham?brand=${manufacturer.name}`}
                                     className="text-gray-600 hover:text-blue-600 transition duration-200"
                                 >
                                     {upper(manufacturer.name)}
-                                </a>
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -65,12 +65,12 @@ function Footer() {
                     <ul className="list-none p-0">
                         {categories.map((category, index) => (
                             <li key={index} className="mb-2">
-                                <a
-                                    href="/"
+                                <Link
+                                     to={`/san-pham?category=${category.categoryId}`}
                                     className="text-gray-600 hover:text-blue-600 transition duration-200"
                                 >
                                     {category.name}
-                                </a>
+                                </Link>
                             </li>
                         ))}
                     </ul>
@@ -78,23 +78,11 @@ function Footer() {
 
                 {/* Đăng ký */}
                 <div className="footer__register">
-                    <p className="text-lg font-medium mb-4">Đăng ký</p>
-                    <p className="text-sm text-gray-600 mb-4">
-                        Đăng ký ngay để nhận được thông tin mới nhất từ chúng tôi
+                    <p className="capitalize text-lg font-medium mb-4">{shop.name}</p>
+                    <p className="text-base tracking-wide text-gray-600 mb-4">
+                       óa foasn foknasok nfaskn fkasn fklasn lfknasl kfnalsk nflkasn lkfan slkf naslk nflkas nflkasn flkasnlfkasnl kfnasl kfna lksnlkasn flkansl kfnasl kfnlask fnlknf
                     </p>
-                    <div className="flex flex-wrap gap-3">
-                        <Input
-                            className="flex-1 min-w-[100px] sm:min-w-[150px] h-10 rounded-md"
-                            placeholder="Email..."
-                        />
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            className="h-10 rounded-md px-6"
-                        >
-                            Đăng ký
-                        </Button>
-                    </div>
+                    
                 </div>
             </div>
         </div>

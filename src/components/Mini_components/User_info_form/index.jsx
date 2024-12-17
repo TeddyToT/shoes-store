@@ -1,8 +1,10 @@
 import { Button, DatePicker, notification, Form, Input } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import moment from 'moment';
+import { DataContexts } from '../../../AppContexts/Contexts';
 
 function UserInfoForm() {
+    const {fetchUserInfo} = useContext(DataContexts)
     const [form] = Form.useForm();
     const [userData, setUserData] = useState(null);
     const userId = localStorage.getItem('id'); // Lấy id từ localStorage
@@ -76,6 +78,7 @@ function UserInfoForm() {
                     description: 'Cập nhật thông tin thành công!',
                     showProgress: true,
                 });
+                fetchUserInfo(userId)
             }
 
         } catch (error) {
