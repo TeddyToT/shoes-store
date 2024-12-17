@@ -80,7 +80,7 @@ function Footer() {
                 <div className="footer__register">
                     <p className="capitalize text-lg font-medium mb-4">{shop.name}</p>
                     <p className="text-base tracking-wide text-gray-600 mb-4">
-                       óa foasn foknasok nfaskn fkasn fklasn lfknasl kfnalsk nflkasn lkfan slkf naslk nflkas nflkasn flkasnlfkasnl kfnasl kfna lksnlkasn flkansl kfnasl kfnlask fnlknf
+                        {shop.about}
                     </p>
                     
                 </div>
