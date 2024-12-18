@@ -15,7 +15,7 @@ const ItemDetails = () => {
   const userId = localStorage.getItem('id');
   const [items, setItems] = useState([])
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
 
   const [productName, setProductName] = useState("");
   const [categoryName, setCategoryName] = useState({});
@@ -65,6 +65,35 @@ const ItemDetails = () => {
       });
       return;
     }
+    if (selectedSize.quantity == 0)
+    {
+      toast.warn('Hiện tồn kho cho size giày này đã hết', {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    if (quantity == 0)
+      {
+        toast.warn('Yêu cầu chọn số lượng sản phẩm lớn hơn 0', {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
+      }
 
     axios.post("http://localhost/be-shopbangiay/api/cart.php", {
       userId: userId.toString(),
