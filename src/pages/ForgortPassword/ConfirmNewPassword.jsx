@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
@@ -6,8 +6,9 @@ import { CiMoneyCheck1, CiLock, CiMail } from "react-icons/ci";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { DataContexts } from "../../AppContexts/Contexts";
 const ConfirmNewPassword = () => {
+  const {shop} = useContext(DataContexts)
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [code, setCode] = useState("")
@@ -23,6 +24,19 @@ const ConfirmNewPassword = () => {
 
     if (!password) {
       toast.warning('Chưa nhập mật khẩu mới', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+    if (!password.length<6) {
+      toast.warning('Yêu cầu nhập mật khẩu ít nhất 6 kí tự', {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -139,14 +153,18 @@ const ConfirmNewPassword = () => {
   ]
   return (
     <div>
-      <Breadcrumb items={items} />
+      <div className="w-11/12 place-self-center py-5">
+        <div className="  place-self-start mb-3">
+          <Breadcrumb items={items} />
+        </div>
+      </div>
 
       <div className="mt-5 mb-10 rounded-sm border border-strokeshadow-default ">
         <div className="flex  md:flex-row items-center">
           <div className="hidden w-full md:block xl:w-1/2">
             <div className="px-26 py-17.5 text-center">
               <Link className="mb-5.5 inline-block" href="/">
-                <img className="" src={logo} alt="Logo" width={400} />
+                <img className="" src={shop.logo} alt="Logo" width={400} />
               </Link>
 
 

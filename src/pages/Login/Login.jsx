@@ -6,10 +6,10 @@ import { CiUser, CiLock } from "react-icons/ci";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Layout } from "antd";
 import { toast } from "react-toastify";
-// import { DataContexts } from "../../AppContexts/Contexts";
+import { DataContexts } from "../../AppContexts/Contexts";
 import axios from "axios";
 const Login = () => {
-  // const {setUserId} = useContext(DataContexts)
+  const {shop} = useContext(DataContexts)
   const navigate = useNavigate();
   const [userName, setUsername] = useState("")
   const [password, setPassword] = useState("");
@@ -101,15 +101,21 @@ const Login = () => {
       .catch((err) => console(err));
   };
   return (
-    <div>
+    <div className="">
+      <div className="w-11/12 place-self-center py-5">
+
+      
+      <div className="  place-self-start mb-3">
       <Breadcrumb pageName="Đăng nhập" />
+      </div>
+      </div>
 
       <div className="mt-5 mb-10 rounded-sm border border-stroke shadow-default ">
         <div className="flex  md:flex-row items-center">
           <div className="hidden w-full md:block xl:w-1/2">
             <div className="px-26 py-17.5 text-center">
               <Link className="mb-5.5 sm:inline-block flex w-[200px] md:w-[350px] lg:w-[400px]" href="/">
-                <img className="" src={logo} alt="Logo" />
+                <img className="" src={shop.logo} alt="Logo" />
               </Link>
 
 

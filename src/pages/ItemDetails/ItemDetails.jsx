@@ -235,9 +235,11 @@ const ItemDetails = () => {
 
   return (
     <>
-      <Breadcrumb items={items} />
+     
       <div className="w-11/12 h-auto flex flex-col py-5 mb-20  items-center place-self-center">
-
+      <div className=" place-self-start mb-3">
+      <Breadcrumb items={items} />
+      </div>
         <div className="w-full px-5 flex ">
           <div className="w-full flex flex-col md:flex-row xl:gap-10 justify-between gap-2">
             <div className="w-full md:w-2/3 lg:w-7/12 flex flex-row  gap-1">
