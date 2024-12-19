@@ -186,7 +186,7 @@ function PaymentInfoForm() {
                 userId: orderData.userId,
                 name: orderData.name.toString(),
                 phone: orderData.phone,
-                address: orderData.phone,
+                address: orderData.address,
                 note: orderData.note,
                 amount: orderData.amount,
                 items: orderData.items
@@ -227,8 +227,8 @@ function PaymentInfoForm() {
                             userId: data.userId,
                             items: data.items,
                             paymentMethod: "Momo",
-                            address: data.address,
-                            note: data.note,
+                            address: data.address.replace(/\+/g, ' '),
+                            note: data.note.replace(/\+/g, ' '),
                             name: data.name.replace(/\+/g, ' '),
                             phone: data.phone,
                         });

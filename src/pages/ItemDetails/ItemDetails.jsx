@@ -155,6 +155,36 @@ const ItemDetails = () => {
         return;
       }
 
+      if (selectedSize.quantity == 0)
+        {
+          toast.warn('Hiện tồn kho cho size giày này đã hết', {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: "light",
+          });
+          return;
+        }
+    
+        if (quantity == 0)
+          {
+            toast.warn('Yêu cầu chọn số lượng sản phẩm lớn hơn 0', {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+              progress: undefined,
+              theme: "light",
+            });
+            return;
+          }
+
     const payload = [{
       productId: productId,
       name: productName,

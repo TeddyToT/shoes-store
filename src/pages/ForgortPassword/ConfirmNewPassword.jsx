@@ -35,7 +35,7 @@ const ConfirmNewPassword = () => {
       });
       return;
     }
-    if (!password.length<6) {
+    if (password.length<6) {
       toast.warning('Yêu cầu nhập mật khẩu ít nhất 6 kí tự', {
         position: "top-right",
         autoClose: 2000,
@@ -89,19 +89,6 @@ const ConfirmNewPassword = () => {
       return;
     }
 
-    if (password.length < 6) {
-      toast.warning('Yêu cầu mật khẩu hơn 6 kí tự', {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        progress: undefined,
-        theme: "light",
-      });
-      return;
-    }
 
 
     axios.post("http://localhost/be-shopbangiay/api/ConfirmCode.php", {

@@ -3,7 +3,9 @@ import React from "react";
 const SizeSelect = ({ sizes, selectedSize, updateSelectedSize }) => {
   return (
     <div className="lg:flex grid md:grid-cols-3 grid-cols-3   gap-3 mt-3">
-      {sizes.map((item, index) => (
+      {sizes.sort((a, b) => {
+                return parseInt(a.size, 10) - parseInt(b.size, 10);
+              }).map((item, index) => (
         <button
           key={index}
           onClick={() => updateSelectedSize(item)}
