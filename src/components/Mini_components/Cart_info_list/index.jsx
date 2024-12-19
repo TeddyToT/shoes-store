@@ -14,6 +14,7 @@ import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataContexts } from "../../../AppContexts/Contexts";
 const { Text } = Typography;
+import { toast } from "react-toastify";
 
 const CartInfoList = () => {
   const { fetchCartUser } = useContext(DataContexts);
@@ -101,26 +102,28 @@ const CartInfoList = () => {
         navigate("/thanh-toan");
       } else {
         console.error("Failed to update cart:", res.statusText);
-        notification.error({
-          message: (
-            <span style={{ color: "red", fontWeight: "bold" }}>
-              Đã xảy ra lỗi
-            </span>
-          ),
-          description: "Cập nhật giỏ hàng thất bại!",
-          showProgress: true,
+        toast.error('Xảy ra lỗi khi thanh toán', {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
         });
       }
     } catch (error) {
       console.error("Error updating cart:", error);
-      notification.error({
-        message: (
-          <span style={{ color: "red", fontWeight: "bold" }}>
-            Đã xảy ra lỗi
-          </span>
-        ),
-        description: "Cập nhật giỏ hàng thất bại!",
-        showProgress: true,
+      toast.error('Cập nhật giỏ hàng thất bại', {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
       });
       console.log("Dữ liệu gửi đi:", JSON.stringify(payload));
     }
@@ -156,28 +159,43 @@ const CartInfoList = () => {
       if (res.success) {
         // setCartData(prevData => {
         // const updatedData = prevData.filter(item => item.productId !== productId);
-        notification.success({
-          message: "Thành công",
-          description: "Sản phẩm đã được xóa khỏi giỏ hàng.",
-          showProgress: true,
+        toast.success('Sản phẩm đã được xóa khỏi giỏ hàng', {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
         });
         fetchCartUser(userId)
         fetchCartData();
         return;
         // });
       } else {
-        notification.error({
-          message: "Lỗi",
-          description: "Không thể xóa sản phẩm.",
-          showProgress: true,
+        toast.error('Xảy ra lỗi. Không thể xóa sản phẩm', {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
         });
       }
     } catch (error) {
       console.error("Error removing item:", error);
-      notification.error({
-        message: "Lỗi",
-        description: "Không thể xóa sản phẩm.",
-        showProgress: true,
+      toast.error('Xảy ra lỗi. Không thể xóa sản phẩm', {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
       });
     }
   };

@@ -2,7 +2,7 @@ import { Button, DatePicker, notification, Form, Input } from 'antd';
 import { useState, useEffect, useContext } from 'react';
 import moment from 'moment';
 import { DataContexts } from '../../../AppContexts/Contexts';
-
+import { toast } from 'react-toastify';
 function UserInfoForm() {
     const {fetchUserInfo} = useContext(DataContexts)
     const [form] = Form.useForm();
@@ -32,11 +32,7 @@ function UserInfoForm() {
 
         } catch (error) {
             console.error('Error fetching user data:', error);
-            notification.error({
-                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                description: 'Không thể tải thông tin người dùng!',
-                showProgress: true,
-            });
+
         }
     };
 
@@ -66,29 +62,44 @@ function UserInfoForm() {
 
 
             if (response.success == false) {
-                notification.success({
-                    message: <span style={{ color: 'red', fontWeight: 'bold' }}>Hoàn thành</span>,
-                    description: 'Cập nhật thông tin thất bại!',
-                    showProgress: true,
-                });
+                toast.error('Cập nhật thông tin thất bại', {
+                          position: "top-right",
+                          autoClose: 1500,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: false,
+                          progress: undefined,
+                          theme: "light",
+                        });
             } else {
                 const updatedData = await response.json();
                 setUserData(updatedData);
-                notification.success({
-                    message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
-                    description: 'Cập nhật thông tin thành công!',
-                    showProgress: true,
-                });
+                toast.success('Cập nhật thông tin thành công', {
+                          position: "top-right",
+                          autoClose: 1500,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: false,
+                          progress: undefined,
+                          theme: "light",
+                        });
                 fetchUserInfo(userId)
             }
 
         } catch (error) {
             console.error('Đã xảy ra lỗi:', error);
-            notification.error({
-                message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                description: 'Cập nhật dữ liệu thất bại!',
-                showProgress: true,
-            });
+            toast.error('Cập nhật dữ liệu thất bại', {
+                      position: "top-right",
+                      autoClose: 1500,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: false,
+                      progress: undefined,
+                      theme: "light",
+                    });
         }
 
     };

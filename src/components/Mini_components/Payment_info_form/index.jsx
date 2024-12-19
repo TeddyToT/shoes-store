@@ -124,11 +124,16 @@ function PaymentInfoForm() {
                 const res = await response.json();
 
                 if (res.success == true) {
-                    notification.success({
-                        message: <span style={{ color: 'green', fontWeight: 'bold' }}>Hoàn thành</span>,
-                        description: 'Đặt hàng thành công!',
-                        showProgress: true,
-                    });
+                    toast.success('Đặt hàng thành công', {
+                              position: "top-right",
+                              autoClose: 1500,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: false,
+                              progress: undefined,
+                              theme: "light",
+                            });
                     const user = {
                         userId: userId
                     }
@@ -165,19 +170,29 @@ function PaymentInfoForm() {
 
                 } else {
                     console.error('Failed to place order');
-                    notification.error({
-                        message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                        description: 'Vui lòng kiểm tra lại thông tin!',
-                        showProgress: true,
-                    });
+                    toast.error('Xảy ra lỗi. Vui lòng kiểm tra lại thông tin', {
+                              position: "top-right",
+                              autoClose: 1500,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: false,
+                              progress: undefined,
+                              theme: "light",
+                            });
                 }
             } catch (error) {
                 console.error('Error placing order:', error);
-                notification.error({
-                    message: <span style={{ color: 'red', fontWeight: 'bold' }}>Có lỗi xảy ra</span>,
-                    description: 'Đặt hàng thất bại!',
-                    showProgress: true,
-                });
+                toast.error('Có lỗi xảy ra', {
+                          position: "top-right",
+                          autoClose: 1500,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: false,
+                          progress: undefined,
+                          theme: "light",
+                        });
                 console.log('Dữ liệu gửi đi:', JSON.stringify(orderData));
             }
         } else {
